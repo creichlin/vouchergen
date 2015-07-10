@@ -1,6 +1,7 @@
 <?php
 //Einstellungen laden und Datenbankverbindung herstellen
-require_once("include/zugriff.inc.php");
+require_once("include/setup.inc.php");
+
 require_once("include/auth.inc.php");
 $title = $lang->get("stats");
 require_once("include/header.inc.php");

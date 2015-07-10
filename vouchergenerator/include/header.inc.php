@@ -1,5 +1,5 @@
 <?php
-require_once("include/zugriff.inc.php");
+
 $settings_q = "SELECT * FROM voucher_settings";
 $settings_r = mysql_query($settings_q);
 $settings = array();

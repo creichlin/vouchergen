@@ -1,8 +1,8 @@
 <?php
-if (file_exists("setup.php") && file_exists("include/zugriff.inc.php")) die("Bitte setup.php l&ouml;schen! Remove setup.php!");
-if (file_exists("setup.php") && !file_exists("include/zugriff.inc.php")) die("Bitte setup.php ausf&uuml;hren! Please start setup.php!");
-//Einstellungen laden und Datenbankverbindung herstellen
-require_once("include/zugriff.inc.php");
+
+require_once("include/setup.inc.php");
+
+
 require_once("include/auth.inc.php");
 $title = $lang->get("vouchermgmt");
 require_once("include/header.inc.php");

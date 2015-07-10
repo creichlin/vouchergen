@@ -1,5 +1,5 @@
 <?php
-require_once("include/zugriff.inc.php");
+require_once("include/setup.inc.php");
 require_once("include/auth.inc.php");
 $title = $lang->get("sms");
 require_once("include/sms_api.php");
