@@ -1,0 +1,161 @@
+@charset "UTF-8";
+
+*{
+	margin:0;
+	padding:0;	
+}
+
+body {
+	font-family:Arial, Helvetica, sans-serif;
+	background-color:#FFEC8B;
+}
+
+#content ul {
+	padding-left:20px;
+}
+
+#content li {
+	margin-bottom:3px;
+}
+
+/*----------------------------Layout-------------------------------*/
+
+#header, #footer{
+	color:black;
+	text-align: center;
+	font-weight: bold;
+}
+
+#footer{
+	font-weight: normal;
+	padding: 5px;
+}
+
+#header #topic{
+	font-size: 50px;
+	padding: 3px;
+}
+
+#header #subtopic{
+	background: #FCD514;
+	font-size: 25px;
+	padding: 3px;
+	width: 970px;
+	margin: auto;
+}
+
+#content{
+	padding: 5px 20px 10px 30px;
+	background-color: #FFFFFF;	
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
+	behavior: url("../wlangen/border-radius.htc");
+	width:930px;
+	margin:auto;
+}
+
+.center {
+text-align:center;	
+}
+
+ul.ul-start {
+	display:inline-block;
+	text-align:left;
+}
+
+img.zentriert {
+    display: block;
+    margin-left: auto;
+    margin-right: auto }
+    
+hr {
+	color: #777;
+    background: #777;
+    border: #777;
+    margin-bottom: 20px;
+	height:2px;
+}    
+    
+/*---------------------------Menü----------------------------------*/
+
+#header #menu ul{
+	display:block;
+}
+
+img{
+	border-style:none;
+}
+
+#header #menu ul li{
+	display:inline-block;
+	border-left:4px solid #FCD514;
+	border-right:4px solid #FCD514;	
+	vertical-align:top;
+}
+
+
+
+#header #menu ul li:HOVER{
+	background-color: #FCD514;
+}
+
+#header #menu ul li a{
+	display:block;
+	min-width: 100px;
+	padding:10px;
+	color:black;
+	text-decoration: none;
+}
+
+/*---------------------------Content-Design------------------------*/
+
+a:link {color: #003399}
+a:visited {color: #003399}
+a:hover {color: #FF3300; text-decoration: none;}
+a:active {color: #003399}
+
+p, form{
+	margin-bottom:20px;
+	margin-top: 20px;
+}
+
+noscript > p{
+	border:2px solid #FF0000;
+}
+
+h3{
+	font-size: 18px;
+	margin-bottom:5px;
+	margin-top: 35px;
+}
+
+/*---------------------------Formular-Design-----------------------*/
+
+
+
+input, select{
+	display:block;
+	margin-bottom: 10px;
+}
+
+input[type=button], input[type=checkbox]{
+	display:inline-block;
+}
+
+input, select{
+	padding: 3px;
+	min-width: 30px;
+}
+
+label{
+	display:block;
+	color: #666666;
+}
+
+button{
+	padding: 3px;
+	min-width: 60px;
+	margin-left: 3px;
+}
+
