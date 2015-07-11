@@ -25,22 +25,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("Location: http://$host$uri/$extra");
     exit();
   } else {
-    $message = "Es ist ein Fehler aufgetreten.";
+    $model['message'] = "Es ist ein Fehler aufgetreten.";
   }
 }
-$title = $lang->get("login");
-include ("include/header.inc.php");
 
-if(isset($message)) {
-  echo "<h2>" . $message . "</h2>";
-}
+$model['title'] = 'Login';
 
-?>
-<form action="login.php" method="post">
-  <label id="Label1" for="username"><?php echo $lang->get("username"); ?></label> <input type="text" name="username" />
-  <label id="Label2" for="passwort"><?php echo $lang->get("password"); ?></label> <input type="password" name="passwort" />
-  <input type="submit" value="Anmelden" />
-</form>
-<?php
-include ("include/footer.inc.php");
+print($twig->render('login.html', $model));
+
 ?>

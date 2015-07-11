@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+  <h2>Pdf generieren</h2>
+  
+  <form method="post" action="print.php">
+  
+    Number of vouchers:
+    <input name="number" value="24" type="text" /> <br />
+    Database:
+    <select name="select_print">
+      {% for id, name in tables %}
+        <option value="{{id}}">{{name}}</option>'
+      {% endfor %}
+    </select>
+    <input name="submit_print" type="submit" value="Create PDF" />
+  </form>
+  
+  
+  <h2>Upload vouchers</h2>
+  <form action="index.php" method="post" enctype="multipart/form-data">
+    Database: 
+    <select name="select_upload">
+      {% for id, name in tables %}
+        <option value="{{id}}">{{name}}</option>'
+      {% endfor %}
+    </select>
+    Select file: <input type="file" name="datei" />
+    <input type="submit" name="submit_upload" value="Upload" />
+  </form>
+  
+  <h2>Delete database</h2>
+  <b>WIll get deleted permanently</b>
+  <br />
+  <form method="post" action="index.php">
+    <select name="select_delete">
+      {% for id, name in tables %}
+        <option value="{{id}}">{{name}}</option>'
+      {% endfor %}
+    </select>
+    <input name="submit_delete" type="submit" value="Datenbank löschen" 
+      onclick="return window.confirm('Are you sure?');" />
+  </form>
+
+{% endblock %}

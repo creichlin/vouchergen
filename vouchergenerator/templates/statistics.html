@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+  <table>
+    <tr>
+      <th>Datenbank</th>
+      <th>Total</th>
+      <th>Frei</th>
+      <th>Benutzt</th>
+    </tr>
+
+    {% for stat in statistics %}
+      <tr>
+        <td>{{stat.name}}</td>
+          <td>{{stat.total}}</td>
+          <td>{{stat.unused}}</td>
+          <td>{{stat.used}}</td>
+        </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

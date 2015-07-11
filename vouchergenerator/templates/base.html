@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Vogen {{title}}</title>
+  </head>
+  
+  <body>
+    <div id="header">
+      <h1 id="topic">{{title}}</h1>
+      <div id="menu">
+        <ul>
+          <li>
+            <a href="index.php">vouchermanagement</a>
+          </li>
+          {% if loggedIn %}
+            <li>
+              <a href="statistik.php">stats</a>
+            </li>
+            <li>
+              <a href="sms.php">sms</a>
+            </li>
+            <li>
+              <a href="config.php">config</a>
+            </li>
+            <li>
+              <a href="logout.php">logout</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div id="content">
+
+      {% if message %}
+        <h3>{{message}}</h3>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+
+    </div>
+  </body>
+</html>

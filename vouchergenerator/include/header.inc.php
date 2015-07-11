@@ -1,6 +1,5 @@
 <?php
 
-$settings = $db->getSettings();
 
 if (isset($_SESSION['angemeldet'])) {
  if ($_SESSION['angemeldet']) {
