@@ -5,7 +5,6 @@ namespace db;
 function esc($i) {
   return mysql_real_escape_string($i);
 }
-
 class Db {
 
   function __construct($host, $username, $password, $schema) {
@@ -65,7 +64,36 @@ class Db {
     $result = mysql_fetch_assoc($mysql);
     $unused = $result['c'];
 
-    return [$used + $unused, $unused, $used];
+    return [
+        $used + $unused,
+        $unused,
+        $used
+    ];
+  }
+
+  function logNumber($empf) {
+    $mysql = mysql_query("SELECT timestamp FROM sms_log WHERE nummer = '" . esc($empf) . "'");
+    if(mysql_num_rows($mysql) > 0) { // Ist in Datenbank
+      $sql = "UPDATE sms_log SET timestamp = CURDATE() WHERE nummer = '" . esc($empf) . "'";
+      mysql_query($sql);
+    } else {
+      $sql = "INSERT INTO smls_log (nummer, timestamp) VALUES('" . esc($empf) . "', CURDATE())";
+      mysql_query($sql);
+    }
+  }
+
+  function numberIsNotLocked($empf) {
+    $mysql = mysql_query('SELECT timestamp FROM sms_log WHERE nummer = ' . $empf);
+    if(mysql_num_rows($mysql) > 0) { // Ist in Datenbank
+      while($row = mysql_fetch_assoc($mysql)) {
+        $data = $row['timestamp'];
+      }
+      if($data != date('Y-m-d'))
+        return 1; // letzer Abruf ist ungleich heute, gebe 1 zurÃ¼ck
+      else
+        return 0; // letzer Abruf ist heute, gebe 0 zurÃ¼ck
+    }
+    return 1; // ist nicht in Datenbank, gebe 1 zurÃ¼ck
   }
 }
 
