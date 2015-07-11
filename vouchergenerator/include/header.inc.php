@@ -1,17 +1,11 @@
 <?php
 
-$settings_q = "SELECT * FROM voucher_settings";
-$settings_r = mysql_query($settings_q);
-$settings = array();
-while ($row = mysql_fetch_array($settings_r, MYSQL_ASSOC)) {
-	$settings[$row["name"]] = $row["value"];
-	if(json_decode($row["value"], true)!=NULL)
-   	$settings[$row["name"]] = json_decode($row["value"], true);
-}
+$settings = $db.getSettings();
+
 if (isset($_SESSION['angemeldet'])) {
  if ($_SESSION['angemeldet']) {
  $login = true;
-} 
+}
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
