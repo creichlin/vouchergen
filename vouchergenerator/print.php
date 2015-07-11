@@ -1,7 +1,7 @@
 ﻿<?php
-require_once ("include/fpdf.php");
-require_once ("include/zugriff.inc.php");
+require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
+require_once ("include/fpdf.php");
 
 $settings = $db->getSettings();
 
@@ -50,19 +50,13 @@ class PDF extends FPDF // Klasse für FPDF-Tabelle
 
 $pdf = new PDF(); // Neues PDF-Objekt
                   // $pdf->AddFont('isonorm_becker','','isonorm_becker.php'); //Schriftart hinzufügen
-if(is_numeric($_POST['number']))
+if(is_numeric($_POST['number'])) {
   $count = $_POST['number']; // Wenn übergebene Voucheranzahl numerisch ist, übernehme diese
-else
+} else {
   $count = 24; // sonst 24 (eine DIN-A4-Seite)
-$mysql = mysql_query("SELECT id, code FROM " . mysql_real_escape_string($_POST['select_print']) . " WHERE printed = 0 ORDER BY id LIMIT " . $count . " "); // auszudruckende Voucher abfragen
-mysql_query("UPDATE `" . $_POST['select_print'] . "` SET `printed`=1 WHERE printed = 0 ORDER BY id LIMIT " . $count . " "); // Voucher als gedruckt markieren (wenn nicht im Testmodus)
-$data = array(); // Array mit Vouchercode und ID erzeugen
-$i = 0;
-while($row = mysql_fetch_assoc($mysql)) {
-  $data[$i][0] = $row['id'];
-  $data[$i][1] = $row['code'];
-  $i ++;
 }
+
+$data = $db->activateTickets($_POST['select_print'], $count);
 // PDF-Tabelle generieren
 $pdf->SetFont('Arial', '', 14);
 $pdf->AddPage();

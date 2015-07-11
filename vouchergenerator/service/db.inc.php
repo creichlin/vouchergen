@@ -41,6 +41,32 @@ class Db {
     }
     return $settings;
   }
+
+  // fetches the oldest non printed tickets, set printed to 1 and returns an array of arrays like [[id, ticket],...]
+  function activateTickets($table, $count) {
+    $mysql = mysql_query("SELECT id, code FROM `" . esc($table) . "` WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // auszudruckende Voucher abfragen
+    mysql_query("UPDATE `" . esc($table) . "` SET printed = 1 WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // Voucher als gedruckt markieren
+    $data = array(); // Array mit Vouchercode und ID erzeugen
+    $i = 0;
+    while($row = mysql_fetch_assoc($mysql)) {
+      $data[$i][0] = $row['id'];
+      $data[$i][1] = $row['code'];
+      $i ++;
+    }
+    return $data;
+  }
+
+  function getStatisticsForTable($table) {
+    $mysql = mysql_query("SELECT COUNT(*) AS c FROM " . esc($table) . " where printed = 1");
+    $result = mysql_fetch_assoc($mysql);
+    $used = $result['c'];
+
+    $mysql = mysql_query("SELECT COUNT(*) AS c FROM " . esc($table) . " where printed = 0");
+    $result = mysql_fetch_assoc($mysql);
+    $unused = $result['c'];
+
+    return [$used + $unused, $unused, $used];
+  }
 }
 
 ?>
