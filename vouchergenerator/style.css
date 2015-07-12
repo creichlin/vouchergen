@@ -16,6 +16,16 @@ form.login {
   margin: 0 auto;
 }
 
+form.sms {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+form.sms .btn-group {
+  width: 100%;
+}
+
 footer {
   position: absolute;
   bottom: 0;

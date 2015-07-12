@@ -6,11 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
-    <!-- Optional theme -->
     <link rel="stylesheet" href="bootstrap/bootstrap-theme.min.css">
-    <!-- Latest compiled and minified JavaScript -->
+    <script src="jquery.js"></script>
     <script src="bootstrap/bootstrap.min.js"></script>
   
     <link rel="stylesheet" type="text/css" href="style.css" />
@@ -41,7 +39,10 @@
     <div class="container">
 
       {% if message %}
-        <h3>{{message}}</h3>
+        <div class="alert alert-warning alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{message}}
+        </div>
       {% endif %}
 
       {% block content %}{% endblock %}

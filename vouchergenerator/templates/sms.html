@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+  <form class="sms" action="sms.php" method="post">
+    <div class="form-group">
+      <label for="nummer">Mobile nummer</label>
+      <input name="nummer" value="" type="text"  class="form-control"/>
+    </div>
+    
+    <div class="btn-group btn-group-vertical" role="group">
+      <button name="test" type="submit" class="btn btn-primary">Test</button>
+      <button name="send" type="submit" class="btn btn-primary">Send ticket</button>
+      <button name="block" type="submit" class="btn btn-primary">Block number</button>
+    </div>
+  </form>
+
+
+{% endblock %}
