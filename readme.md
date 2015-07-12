@@ -19,4 +19,5 @@ roadmap
   * make current config which is in db configurable by config file or env vars or remain in db (deploy can be easier made automatically)
   * search for new name
   * integrate i18n into templates
+  * make userinterface beautiful and consolidated (progressing...)
  

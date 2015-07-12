@@ -3,45 +3,73 @@
 
 {% block content %}
 
-  <h2>Pdf generieren</h2>
-  
-  <form method="post" action="print.php">
-  
-    Number of vouchers:
-    <input name="number" value="24" type="text" /> <br />
-    Database:
-    <select name="select_print">
-      {% for id, name in tables %}
-        <option value="{{id}}">{{name}}</option>'
-      {% endfor %}
-    </select>
-    <input name="submit_print" type="submit" value="Create PDF" />
-  </form>
-  
-  
-  <h2>Upload vouchers</h2>
-  <form action="index.php" method="post" enctype="multipart/form-data">
-    Database: 
-    <select name="select_upload">
-      {% for id, name in tables %}
-        <option value="{{id}}">{{name}}</option>'
-      {% endfor %}
-    </select>
-    Select file: <input type="file" name="datei" />
-    <input type="submit" name="submit_upload" value="Upload" />
-  </form>
-  
-  <h2>Delete database</h2>
-  <b>WIll get deleted permanently</b>
-  <br />
-  <form method="post" action="index.php">
-    <select name="select_delete">
-      {% for id, name in tables %}
-        <option value="{{id}}">{{name}}</option>'
-      {% endfor %}
-    </select>
-    <input name="submit_delete" type="submit" value="Datenbank löschen" 
-      onclick="return window.confirm('Are you sure?');" />
-  </form>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">Generate PDF</div>
+        <div class="panel-body">      
+          <form method="post" action="print.php">
+            <div class="form-group">
+              <label for="number">Number of vouchers</label>
+              <input name="number" value="24" type="text" class="form-control"/>
+            </div>
+            <div class="form-group">
+              <label for="select_print">Database</label>
+              <select name="select_print" class="form-control">
+                {% for id, name in tables %}
+                  <option value="{{id}}">{{name}}</option>'
+                {% endfor %}
+              </select>
+            </div>
+            <input name="submit_print" type="submit" class="btn btn-primary" value="Create PDF" />
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">Upload vouchers</div>
+        <div class="panel-body">
+          <form action="index.php" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="select_upload">Database</label>
+              <select name="select_upload" class="form-control">
+                {% for id, name in tables %}
+                  <option value="{{id}}">{{name}}</option>'
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="form_group">
+              <label for="datei">Select file</label>
+              <input id="cvs-upload" type="file" name="datei"/>
+            </div>
+            <input type="submit" name="submit_upload" class="btn btn-primary" value="Upload" />
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">Delete database</div>
+        <div class="panel-body">      
+          <form method="post" action="index.php">
+            <div class="form-group">
+              <label for="select_delete">Database</label>
+              <select name="select_delete" class="form-control">
+                {% for id, name in tables %}
+                  <option value="{{id}}">{{name}}</option>'
+                {% endfor %}
+              </select>
+            </div>
+            <input name="submit_delete" type="submit"  class="btn btn-primary"
+              value="Datenbank löschen" onclick="return window.confirm('Are you sure?');" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}

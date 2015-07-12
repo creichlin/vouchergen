@@ -3,11 +3,13 @@
 
 {% block content %}
 
-
-  <form action="login.php" method="post">
-    <label id="Label1" for="username">Username</label> <input type="text" name="username" />
-    <label id="Label2" for="passwort">Password</label> <input type="password" name="passwort" />
-    <input type="submit" value="Anmelden" />
+  <form action="login.php" class="login" method="post">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <label for="username" class="sr-only">Username</label>
+    <input type="text" class="form-control" name="username" placeholder="Username" required autofocus/>
+    <label for="passwort" class="sr-only">Password</label>
+    <input type="password" class="form-control" name="passwort" placeholder="Password" required/>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
   </form>
 
 {% endblock %}
