@@ -21,12 +21,7 @@ if(isset($_POST['submit_upload'])) {
   }
 }
 
-if(empty($settings['dbtables'])) {
-  $model["message"] = $lang->get("dbtables_empty");
-}
-
 $model['title'] = $lang->get("vouchermgmt");
-
 
 print($twig->render('index.html', $model));
 ?>

@@ -10,6 +10,21 @@ class Db {
   function __construct($host, $username, $password, $schema) {
     @mysql_connect($host, $username, $password) or die("Connection to MySQL failed!");
     @mysql_select_db($schema) or die("Access to database failed!");
+
+    $tables = [];
+    $result = mysql_query("show tables");
+    while($row = mysql_fetch_array($result)) {
+      $tables[] = $row[0];
+    }
+
+    if(!in_array('sms_log', $tables)) {
+      mysql_query("CREATE TABLE IF NOT EXISTS `sms_log` (`id` int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`))");
+    }
+
+    if(!in_array('voucher_settings', $tables)) {
+      mysql_query("CREATE TABLE IF NOT EXISTS `voucher_settings` (`name` varchar(100) NOT NULL, `value` text NOT NULL)");
+      mysql_query("ALTER TABLE `voucher_settings` ADD PRIMARY KEY(`name`)");
+    }
   }
 
   function deleteAllRows($table) {
@@ -21,7 +36,14 @@ class Db {
   }
 
   function updateSetting($key, $value) {
-    $query = "UPDATE voucher_settings SET `value`='" . esc($value) . "' WHERE `name`='" . esc($key) . "';";
+    $result = mysql_query("select count(*) as num from voucher_settings where `name` = '" . esc($key) . "';");
+    $data = mysql_fetch_assoc($result);
+    if($data['num'] > 0) {
+      $query = "UPDATE voucher_settings SET `value`='" . esc($value) . "' WHERE `name`='" . esc($key) . "';";
+    } else {
+      $query = "insert into voucher_settings (name, value) values('" . esc($key) . "', '" . esc($value) . "');";
+
+    }
     mysql_query($query);
   }
 
@@ -56,11 +78,11 @@ class Db {
   }
 
   function getStatisticsForTable($table) {
-    $mysql = mysql_query("SELECT COUNT(*) AS c FROM " . esc($table) . " where printed = 1");
+    $mysql = mysql_query("SELECT COUNT(*) AS c FROM `" . esc($table) . "` where printed = 1");
     $result = mysql_fetch_assoc($mysql);
     $used = $result['c'];
 
-    $mysql = mysql_query("SELECT COUNT(*) AS c FROM " . esc($table) . " where printed = 0");
+    $mysql = mysql_query("SELECT COUNT(*) AS c FROM `" . esc($table) . "` where printed = 0");
     $result = mysql_fetch_assoc($mysql);
     $unused = $result['c'];
 

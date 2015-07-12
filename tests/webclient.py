@@ -18,13 +18,13 @@ class WebClient():
   def updateSettings(self, **kwargs):
     """ update settings over webinterface, takes defaults from webinterface """
     
-    data = {};
+    data = {'submit': 'submit'}
     for name, value in self.getSettings().items():
       if name in kwargs:
         data[name] = kwargs[name]
       else:
         data[name] = value
-
+        
     self.__post("config.php", data)
     
   def getSettings(self):

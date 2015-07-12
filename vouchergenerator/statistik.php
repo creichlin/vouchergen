@@ -8,7 +8,7 @@ $model['title'] = $lang->get("stats");
 
 $statistics = [];
 
-foreach($settings['dbtables'] as $key => $value) {
+foreach($config->get('dbtables') as $key => $value) {
   $stat = $db->getStatisticsForTable($key);
   $element = [];
   $element['name'] = $value;

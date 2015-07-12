@@ -28,14 +28,17 @@ if(isset($_POST['submit'])) {
   }
 }
 
+# they might have been changed above so update them
+$config->initDbValues($db->getSettings());
+
 $model['title'] = $lang->get("config");
-$model['tableHeaders'] = $settings['tbl_header'];
-$model['voucherHeading'] = $settings['vou_header'];
-$model['voucherText'] = $settings['vou_text'];
-$model['voucherLabel'] = $settings['vou_label'];
-$model['smsVoucherTable'] = $settings['sms_voutbl'];
-$model['smsText'] = $settings['sms_text'];
-$model['smsGatewayKey'] = $settings['sms_gtwkey'];
+$model['tableHeaders'] = $config->get('tbl_header');
+$model['voucherHeading'] = $config->get('vou_header');
+$model['voucherText'] = $config->get('vou_text');
+$model['voucherLabel'] = $config->get('vou_label');
+$model['smsVoucherTable'] = $config->get('sms_voutbl');
+$model['smsText'] = $config->get('sms_text');
+$model['smsGatewayKey'] = $config->get('sms_gtwkey');
 
 print($twig->render('settings.html', $model));
 ?>

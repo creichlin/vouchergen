@@ -3,8 +3,6 @@ require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
 require_once ("include/fpdf.php");
 
-$settings = $db->getSettings();
-
 class PDF extends FPDF // Klasse für FPDF-Tabelle
 {
 
@@ -60,7 +58,7 @@ $data = $db->activateTickets($_POST['select_print'], $count);
 // PDF-Tabelle generieren
 $pdf->SetFont('Arial', '', 14);
 $pdf->AddPage();
-$pdf->FancyTable($settings['tbl_header'], $data);
+$pdf->FancyTable($config->get('tbl_header'), $data);
 // PDF-Voucher generieren
 $rows = 8;
 $cols = 3;
@@ -78,14 +76,14 @@ while(true) {
       $h = $height / $rows;
       $dataEntry = array_shift($data);
       $pdf->SetFont('Arial', 'U', 15);
-      $pdf->Cell($w, 10, $settings['vou_header'], 0, 2, 'C');
+      $pdf->Cell($w, 10, $config->get('vou_header'), 0, 2, 'C');
       $pdf->SetFont('Arial', '', 9);
-      $pdf->Cell($w, 8, $settings['vou_text'], 0, 2, 'C');
+      $pdf->Cell($w, 8, $config->get('vou_text'), 0, 2, 'C');
       $pdf->SetFont('Arial', '', 12);
       // $pdf->SetFont('isonorm_becker','',12);
-      $pdf->Cell($w, 8, $settings['vou_label'] . $dataEntry[1], 0, 2, 'C');
+      $pdf->Cell($w, 8, $config->get('vou_label') . $dataEntry[1], 0, 2, 'C');
       $pdf->SetFont('Arial', '', 8);
-      $pdf->Cell($w, 8, $settings['dbtables'][mysql_real_escape_string($_POST['select_print'])] . ' ID ' . $dataEntry[0], 0, 2, 'R');
+      $pdf->Cell($w, 8, $config->get('dbtables')[mysql_real_escape_string($_POST['select_print'])] . ' ID ' . $dataEntry[0], 0, 2, 'R');
       $pdf->SetXY($x, $y);
       $pdf->Cell($w, $h, '', 1, $col == $cols);
       if(count($data) == 0) {

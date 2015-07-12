@@ -1,11 +1,28 @@
 import webclient
 import unittest
+import mysql.connector
+
+
 
 
 class TestConfig(unittest.TestCase):
 
   def setUp(self):
     self.wc = webclient.WebClient('http://vogen.local/', 'admin', 'vogen');
+    
+    self.connection = mysql.connector.connect(host = 'localhost', user = 'voucher', password = 'voucher', database = 'voucher')
+
+    cursor = self.connection.cursor(prepared = True)
+    cursor.execute("show tables")
+    
+    tables = [row[0].decode('utf-8') for row in cursor]
+    
+    for tn in tables:
+      cursor.execute('drop table `%s`' % (tn, )) 
+      
+    
+    cursor.close()
+    self.connection.commit()
     
   def tearDown(self):
     self.wc.disconnect()
