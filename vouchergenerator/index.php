@@ -1,6 +1,5 @@
 <?php
 require_once ("include/setup.inc.php");
-
 require_once ("include/auth.inc.php");
 
 // delete table action
@@ -30,6 +29,4 @@ $model['title'] = $lang->get("vouchermgmt");
 
 
 print($twig->render('index.html', $model));
-
-include ("include/footer.inc.php");
 ?>

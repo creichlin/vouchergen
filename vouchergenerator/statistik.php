@@ -21,6 +21,5 @@ foreach($settings['dbtables'] as $key => $value) {
 $model['statistics'] = $statistics;
 
 print($twig->render('statistics.html', $model));
-
 ?>
 

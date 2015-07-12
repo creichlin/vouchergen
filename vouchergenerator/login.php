@@ -1,7 +1,6 @@
 <?php
 require_once ("include/setup.inc.php");
 
-
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
   $username = $_POST['username'];
   $password = $_POST['passwort'];
