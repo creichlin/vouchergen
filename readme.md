@@ -11,7 +11,7 @@ roadmap
   * extract db code into own module (done)
   * add a bunch of tests (progressing...)
   * add templates for views (easier readable code) (done)
-  * use PDO for db access (current mysql api deprecated, no transactions)
+  * use mysqli for db access (current mysql api deprecated, no transactions) (done)
   * add transactions (currently there is a small chance that same key is sendt to multiple persons)
   * use prepared statement (to prevent sql injection)
   * make country phone prefix code configurable

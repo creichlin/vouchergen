@@ -2,60 +2,60 @@
 
 namespace db;
 
-function esc($i) {
-  return mysql_real_escape_string($i);
-}
 class Db {
 
   function __construct($host, $username, $password, $schema) {
-    @mysql_connect($host, $username, $password) or die("Connection to MySQL failed!");
-    @mysql_select_db($schema) or die("Access to database failed!");
+    $this->db = mysqli_connect($host, $username, $password, $schema);
 
     $tables = [];
-    $result = mysql_query("show tables");
-    while($row = mysql_fetch_array($result)) {
+    $result = $this->db->query("show tables;");
+    while ($row = $result->fetch_row()) {
       $tables[] = $row[0];
     }
 
     if(!in_array('sms_log', $tables)) {
-      mysql_query("CREATE TABLE IF NOT EXISTS `sms_log` (`id` int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`))");
+      $this->db->query("CREATE TABLE IF NOT EXISTS `sms_log` (`id` int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`))");
     }
 
     if(!in_array('voucher_settings', $tables)) {
-      mysql_query("CREATE TABLE IF NOT EXISTS `voucher_settings` (`name` varchar(100) NOT NULL, `value` text NOT NULL)");
-      mysql_query("ALTER TABLE `voucher_settings` ADD PRIMARY KEY(`name`)");
+      $this->db->query("CREATE TABLE IF NOT EXISTS `voucher_settings` (`name` varchar(100) NOT NULL, `value` text NOT NULL)");
+      $this->db->query("ALTER TABLE `voucher_settings` ADD PRIMARY KEY(`name`)");
     }
+  }
+
+  function esc($i) {
+    return $this->db->real_escape_string($i);
   }
 
   function deleteAllRows($table) {
-    mysql_query("TRUNCATE `" . esc($table) . "`");
+    $this->db->query("TRUNCATE `" . $this->esc($table) . "`");
   }
 
   function addTicketToTable($table, $value) {
-    mysql_query("INSERT INTO `" . esc($table) . "` VALUES ('', '" . esc($value) . "', '0')");
+    $this->db->query("INSERT INTO `" . $this->esc($table) . "` VALUES ('', '" . $this->esc($value) . "', '0')");
   }
 
   function updateSetting($key, $value) {
-    $result = mysql_query("select count(*) as num from voucher_settings where `name` = '" . esc($key) . "';");
-    $data = mysql_fetch_assoc($result);
+    $result = $this->db->query("select count(*) as num from voucher_settings where `name` = '" . $this->esc($key) . "';");
+    $data = $result->fetch_assoc();
     if($data['num'] > 0) {
-      $query = "UPDATE voucher_settings SET `value`='" . esc($value) . "' WHERE `name`='" . esc($key) . "';";
+      $query = "UPDATE voucher_settings SET `value`='" . $this->esc($value) . "' WHERE `name`='" . $this->esc($key) . "';";
     } else {
-      $query = "insert into voucher_settings (name, value) values('" . esc($key) . "', '" . esc($value) . "');";
+      $query = "insert into voucher_settings (name, value) values('" . $this->esc($key) . "', '" . $this->esc($value) . "');";
 
     }
-    mysql_query($query);
+    $this->db->query($query);
   }
 
   function createTicketTable($name) {
-    $q = "CREATE TABLE IF NOT EXISTS `" . esc($name) . "` (`id` int(11) NOT NULL auto_increment, `code` varchar(15) NOT NULL, `printed` tinyint(4) default NULL, PRIMARY KEY  (`id`), UNIQUE KEY `code` (`code`))";
-    mysql_query($q);
+    $q = "CREATE TABLE IF NOT EXISTS `" . $this->esc($name) . "` (`id` int(11) NOT NULL auto_increment, `code` varchar(15) NOT NULL, `printed` tinyint(4) default NULL, PRIMARY KEY  (`id`), UNIQUE KEY `code` (`code`))";
+    $this->db->query($q);
   }
 
   function getSettings() {
-    $settings_r = mysql_query("SELECT * FROM voucher_settings");
+    $settings_r = $this->db->query("SELECT * FROM voucher_settings");
     $settings = array();
-    while($row = mysql_fetch_array($settings_r, MYSQL_ASSOC)) {
+    while($row = $settings_r->fetch_assoc()) {
       $settings[$row["name"]] = $row["value"];
       if(json_decode($row["value"], true) != NULL)
         $settings[$row["name"]] = json_decode($row["value"], true);
@@ -65,25 +65,22 @@ class Db {
 
   // fetches the oldest non printed tickets, set printed to 1 and returns an array of arrays like [[id, ticket],...]
   function activateTickets($table, $count) {
-    $mysql = mysql_query("SELECT id, code FROM `" . esc($table) . "` WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // auszudruckende Voucher abfragen
-    mysql_query("UPDATE `" . esc($table) . "` SET printed = 1 WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // Voucher als gedruckt markieren
+    $mysql = $this->db->query("SELECT id, code FROM `" . $this->esc($table) . "` WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // auszudruckende Voucher abfragen
+    $this->db->query("UPDATE `" . $this->esc($table) . "` SET printed = 1 WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // Voucher als gedruckt markieren
     $data = array(); // Array mit Vouchercode und ID erzeugen
-    $i = 0;
-    while($row = mysql_fetch_assoc($mysql)) {
-      $data[$i][0] = $row['id'];
-      $data[$i][1] = $row['code'];
-      $i ++;
+    while($row = $mysql->fetch_assoc()) {
+      $data[]= [$row['id'], $row['code']];
     }
     return $data;
   }
 
   function getStatisticsForTable($table) {
-    $mysql = mysql_query("SELECT COUNT(*) AS c FROM `" . esc($table) . "` where printed = 1");
-    $result = mysql_fetch_assoc($mysql);
+    $mysql = $this->db->query("SELECT COUNT(*) AS c FROM `" . $this->esc($table) . "` where printed = 1");
+    $result = $mysql->fetch_assoc();
     $used = $result['c'];
 
-    $mysql = mysql_query("SELECT COUNT(*) AS c FROM `" . esc($table) . "` where printed = 0");
-    $result = mysql_fetch_assoc($mysql);
+    $mysql = $this->db->query("SELECT COUNT(*) AS c FROM `" . $this->esc($table) . "` where printed = 0");
+    $result = $mysql->fetch_assoc();
     $unused = $result['c'];
 
     return [
@@ -94,20 +91,20 @@ class Db {
   }
 
   function logNumber($empf) {
-    $mysql = mysql_query("SELECT timestamp FROM sms_log WHERE nummer = '" . esc($empf) . "'");
+    $mysql = $this->db->mysql_query("SELECT timestamp FROM sms_log WHERE nummer = '" . $this->esc($empf) . "'");
     if(mysql_num_rows($mysql) > 0) { // Ist in Datenbank
-      $sql = "UPDATE sms_log SET timestamp = CURDATE() WHERE nummer = '" . esc($empf) . "'";
-      mysql_query($sql);
+      $sql = "UPDATE sms_log SET timestamp = CURDATE() WHERE nummer = '" . $this->esc($empf) . "'";
+      $this->db->query($sql);
     } else {
-      $sql = "INSERT INTO smls_log (nummer, timestamp) VALUES('" . esc($empf) . "', CURDATE())";
-      mysql_query($sql);
+      $sql = "INSERT INTO smls_log (nummer, timestamp) VALUES('" . $this->esc($empf) . "', CURDATE())";
+      $this->db->query($sql);
     }
   }
 
   function numberIsNotLocked($empf) {
-    $mysql = mysql_query('SELECT timestamp FROM sms_log WHERE nummer = ' . $empf);
-    if(mysql_num_rows($mysql) > 0) { // Ist in Datenbank
-      while($row = mysql_fetch_assoc($mysql)) {
+    $mysql = $this->db->mysql_query('SELECT timestamp FROM sms_log WHERE nummer = ' . $empf);
+    if($mysql->num_rows() > 0) { // Ist in Datenbank
+      while($row = $mysql->fetch_assoc()) {
         $data = $row['timestamp'];
       }
       if($data != date('Y-m-d'))

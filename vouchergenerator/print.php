@@ -83,7 +83,7 @@ while(true) {
       // $pdf->SetFont('isonorm_becker','',12);
       $pdf->Cell($w, 8, $config->get('vou_label') . $dataEntry[1], 0, 2, 'C');
       $pdf->SetFont('Arial', '', 8);
-      $pdf->Cell($w, 8, $config->get('dbtables')[mysql_real_escape_string($_POST['select_print'])] . ' ID ' . $dataEntry[0], 0, 2, 'R');
+      $pdf->Cell($w, 8, $config->get('dbtables')[$_POST['select_print']] . ' ID ' . $dataEntry[0], 0, 2, 'R');
       $pdf->SetXY($x, $y);
       $pdf->Cell($w, $h, '', 1, $col == $cols);
       if(count($data) == 0) {
