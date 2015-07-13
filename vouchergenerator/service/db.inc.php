@@ -28,8 +28,8 @@ class Db {
 
     $index = 1;
     foreach($params as $v) {
-      $ps->bindParam($index, $v);
-      $index++;
+      $ps->bindValue($index, $v);
+      $index = $index + 1;
     }
 
     $ps->execute();
@@ -43,33 +43,30 @@ class Db {
     return $ps;
   }
 
-  function esc($i) {
-    return $i;
+  function quote($i) {
+    return "`" . str_replace("`", "", $i) . "`";
   }
 
   function deleteAllRows($table) {
-    $this->query("TRUNCATE `" . $this->esc($table) . "`");
+    $this->query("TRUNCATE " . $this->quote($table));
   }
 
   function addTicketToTable($table, $value) {
-    $this->query("INSERT INTO `" . $this->esc($table) . "` VALUES ('', '" . $this->esc($value) . "', '0')");
+    $this->query("INSERT INTO " . $this->quote($table) . " VALUES ('', ?, '0')", [$value]);
   }
 
   function updateSetting($key, $value) {
-    $result = $this->query("select count(*) as num from voucher_settings where `name` = '" . $this->esc($key) . "';");
+    $result = $this->query("select count(*) as num from voucher_settings where `name` = ?;", [$key]);
     $data = $result->fetch();
-    print("data");
-    print_r($data);
     if($data['num'] > 0) {
-      $query = "UPDATE voucher_settings SET `value`='" . $this->esc($value) . "' WHERE `name`='" . $this->esc($key) . "';";
+      $this->query("UPDATE voucher_settings SET `value`= ? WHERE `name`= ?;", [$value, $key]);
     } else {
-      $query = "insert into voucher_settings (name, value) values('" . $this->esc($key) . "', '" . $this->esc($value) . "');";
+      $this->query("insert into voucher_settings (`name`, `value`) values(?, ?);", [$key, $value]);
     }
-    $this->query($query);
   }
 
   function createTicketTable($name) {
-    $q = "CREATE TABLE IF NOT EXISTS `" . $this->esc($name) . "` (`id` int(11) NOT NULL auto_increment, `code` varchar(15) NOT NULL, `printed` tinyint(4) default NULL, PRIMARY KEY  (`id`), UNIQUE KEY `code` (`code`))";
+    $q = "CREATE TABLE IF NOT EXISTS " . $this->quote($name) . " (`id` int(11) NOT NULL auto_increment, `code` varchar(15) NOT NULL, `printed` tinyint(4) default NULL, PRIMARY KEY  (`id`), UNIQUE KEY `code` (`code`))";
     $this->query($q);
   }
 
@@ -87,8 +84,8 @@ class Db {
 
   // fetches the oldest non printed tickets, set printed to 1 and returns an array of arrays like [[id, ticket],...]
   function activateTickets($table, $count) {
-    $mysql = $this->query("SELECT id, code FROM `" . $this->esc($table) . "` WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // auszudruckende Voucher abfragen
-    $this->query("UPDATE `" . $this->esc($table) . "` SET printed = 1 WHERE printed = 0 ORDER BY id LIMIT " . $count . ";"); // Voucher als gedruckt markieren
+    $mysql = $this->query("SELECT id, code FROM " . $this->quote($table) . " WHERE printed = 0 ORDER BY id LIMIT $count;"); // auszudruckende Voucher abfragen
+    $this->query("UPDATE " . $this->quote($table) . " SET printed = 1 WHERE printed = 0 ORDER BY id LIMIT $count;"); // Voucher als gedruckt markieren
     $data = array(); // Array mit Vouchercode und ID erzeugen
     while($row = $mysql->fetch()) {
       $data[] = [
@@ -100,11 +97,11 @@ class Db {
   }
 
   function getStatisticsForTable($table) {
-    $mysql = $this->query("SELECT COUNT(*) AS c FROM `" . $this->esc($table) . "` where printed = 1");
+    $mysql = $this->query("SELECT COUNT(*) AS c FROM " . $this->quote($table) . " where printed = 1");
     $row = $mysql->fetch();
     $used = $row['c'];
 
-    $mysql = $this->query("SELECT COUNT(*) AS c FROM `" . $this->esc($table) . "` where printed = 0");
+    $mysql = $this->query("SELECT COUNT(*) AS c FROM " . $this->quote($table) . " where printed = 0");
     $row = $mysql->fetch();
     $unused = $row['c'];
 
@@ -116,18 +113,16 @@ class Db {
   }
 
   function logNumber($empf) {
-    $mysql = $this->db->mysql_query("SELECT timestamp FROM sms_log WHERE nummer = '" . $this->esc($empf) . "'");
+    $mysql = $this->db->mysql_query("SELECT timestamp FROM sms_log WHERE nummer = ?", [$empf]);
     if(mysql_num_rows($mysql) > 0) { // Ist in Datenbank
-      $sql = "UPDATE sms_log SET timestamp = CURDATE() WHERE nummer = '" . $this->esc($empf) . "'";
-      $this->query($sql);
+      $this->query("UPDATE sms_log SET timestamp = CURDATE() WHERE nummer = ?;", [$empf]);
     } else {
-      $sql = "INSERT INTO smls_log (nummer, timestamp) VALUES('" . $this->esc($empf) . "', CURDATE())";
-      $this->query($sql);
+      $this->query("INSERT INTO smls_log (nummer, timestamp) VALUES(?, CURDATE())", [$empf]);
     }
   }
 
   function numberIsNotLocked($empf) {
-    $mysql = $this->db->mysql_query('SELECT timestamp FROM sms_log WHERE nummer = ' . $empf);
+    $mysql = $this->db->mysql_query('SELECT timestamp FROM sms_log WHERE nummer = ?', [$empf]);
     if($mysql->num_rows() > 0) { // Ist in Datenbank
       while($row = $mysql->fetch()) {
         $data = $row['timestamp'];
