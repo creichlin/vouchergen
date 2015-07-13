@@ -12,7 +12,6 @@ if(isset($_POST['submit'])) {
   if(!empty($_POST['tbl_header'])) {
     $tbl_header = trim($_POST['tbl_header']);
     $tbl_header = explode("\n", $tbl_header);
-    $tbl_header = array_filter($tbl_header);
     $db->updateSetting("tbl_header", json_encode($tbl_header));
   }
   if(!empty($_POST['dbtables'])) {
@@ -23,7 +22,6 @@ if(isset($_POST['submit'])) {
       $final[$line[0]] = $line[1];
       $db->createTicketTable($line[0]);
     }
-    array_filter($final);
     $db->updateSetting("dbtables", json_encode($final));
   }
 }
@@ -31,6 +29,7 @@ if(isset($_POST['submit'])) {
 # they might have been changed above so update them
 $config->initDbValues($db->getSettings());
 
+$model['tables'] = $config->get('dbtables');
 $model['title'] = $lang->get("config");
 $model['tableHeaders'] = $config->get('tbl_header');
 $model['voucherHeading'] = $config->get('vou_header');

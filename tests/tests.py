@@ -2,10 +2,7 @@ import webclient
 import unittest
 import mysql.connector
 
-
-
-
-class TestConfig(unittest.TestCase):
+class TestBase(unittest.TestCase):
 
   def setUp(self):
     self.wc = webclient.WebClient('http://vogen.local/', 'admin', 'vogen');
@@ -27,6 +24,24 @@ class TestConfig(unittest.TestCase):
   def tearDown(self):
     self.wc.disconnect()
 
+
+class TestDatabases(TestBase):
+  
+  def testCreate(self):
+    self.wc.updateSettings(dbtables = "aaa|AAA")
+    tables = self.wc.getTablesFromStats()
+    self.assertEquals(len(tables), 1)
+    self.assertEquals(tables[0], 'aaa')
+    
+  def testCreateMultiple(self):
+    self.wc.updateSettings(dbtables = "aaa|AAA\nbbb|BBB\nccc|CCC")
+    tables = self.wc.getTablesFromStats()
+    self.assertEquals(len(tables), 3)
+    self.assertEquals(tables[0], 'aaa')
+    self.assertEquals(tables[1], 'bbb')
+    self.assertEquals(tables[2], 'ccc')
+
+class TestConfig(TestBase):
 
   def testSimpleConfigs(self):
     self.wc.updateSettings(vou_header = 'HEADER', vou_text = 'TEXT', vou_label = 'LABEL')

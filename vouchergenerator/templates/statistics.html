@@ -12,12 +12,12 @@
     </tr>
 
     {% for stat in statistics %}
-      <tr>
+      <tr table-id="{{stat.id}}">
         <td>{{stat.name}}</td>
-          <td>{{stat.total}}</td>
-          <td>{{stat.unused}}</td>
-          <td>{{stat.used}}</td>
-        </tr>
+        <td>{{stat.total}}</td>
+        <td>{{stat.unused}}</td>
+        <td>{{stat.used}}</td>
+      </tr>
     {% endfor %}
   </table>
 {% endblock %}

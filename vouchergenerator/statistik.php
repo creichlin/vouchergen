@@ -11,6 +11,7 @@ $statistics = [];
 foreach($config->get('dbtables') as $key => $value) {
   $stat = $db->getStatisticsForTable($key);
   $element = [];
+  $element['id'] = $key;
   $element['name'] = $value;
   $element['total'] = $stat[0];
   $element['unused'] = $stat[1];

@@ -35,7 +35,17 @@ class WebClient():
     for input in soup.select("input"):
       data[input["name"]] = input["value"]
 
+    for input in soup.select("textarea"):
+      data[input["name"]] = input.get_text()
+
     return data
+  
+  def getTablesFromStats(self):
+    soup = self.__getAsSoup("statistik.php")
+    tables = []
+    for row in soup.select('table > tr')[1:]:
+      tables.append(row['table-id'])
+    return tables
 
   def disconnect(self):
     self.__getAsText("logout.php")
