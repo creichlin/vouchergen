@@ -1,6 +1,8 @@
 <?php
+
 require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
+
 
 
 // delete table action
