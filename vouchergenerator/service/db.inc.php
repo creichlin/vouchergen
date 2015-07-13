@@ -28,11 +28,11 @@ class Db {
   }
 
   function deleteAllRows($table) {
-    mysql_query("TRUNCATE " . esc($table));
+    mysql_query("TRUNCATE `" . esc($table) . "`");
   }
 
   function addTicketToTable($table, $value) {
-    mysql_query("INSERT INTO " . esc($table) . " VALUES ('', '" . esc($value) . "', '0')");
+    mysql_query("INSERT INTO `" . esc($table) . "` VALUES ('', '" . esc($value) . "', '0')");
   }
 
   function updateSetting($key, $value) {

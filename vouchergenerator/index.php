@@ -2,6 +2,7 @@
 require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
 
+
 // delete table action
 if(isset($_POST['submit_delete'])) {
   $db->deleteAllRows($_POST['select_delete']);
@@ -24,4 +25,5 @@ if(isset($_POST['submit_upload'])) {
 $model['title'] = $lang->get("vouchermgmt");
 
 print($twig->render('index.html', $model));
+
 ?>

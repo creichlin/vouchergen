@@ -14,6 +14,27 @@ class WebClient():
     self.session = None
 
     self.__login()
+    
+  def importTickets(self, db, tickets):
+    file = "#\n" * 7
+    
+    for t in tickets:
+      file += '" ' + t + '"\n'
+    
+    data = {
+            'select_upload': db,
+            'submit_upload': 'upload'
+            }
+    
+    self.__post("index.php", data, files = {'datei': ('file.csv', file)})
+    
+  def printPDF(self, table, number):
+    data = {
+            'submit_print': '',
+            'number': '%s' % (number, ),
+            'select_print': table
+            }
+    self.__post('print.php', data)
 
   def updateSettings(self, **kwargs):
     """ update settings over webinterface, takes defaults from webinterface """
@@ -46,7 +67,16 @@ class WebClient():
     for row in soup.select('table > tr')[1:]:
       tables.append(row['table-id'])
     return tables
-
+  
+  def getStats(self, table):
+    soup = self.__getAsSoup("statistik.php")
+    selector = 'tr[table-id=%s]' % (table, )
+    row = soup.find("tr", {'table-id': table}).findAll("td")
+    
+    return {'total' : int(row[1].get_text()),
+            'unused': int(row[2].get_text()),
+            'used': int(row[3].get_text())}
+  
   def disconnect(self):
     self.__getAsText("logout.php")
     self.session.close()
@@ -74,6 +104,6 @@ class WebClient():
     response = self.__getAsText(url, **kwargs)
     return BeautifulSoup(response)
   
-  def __post(self, url, data, **kwargs):
-    return self.session.post(self.__buildUrl(url, **kwargs), data = data).text
+  def __post(self, url, data, files = {}, **kwargs):
+    return self.session.post(self.__buildUrl(url, **kwargs), data = data, files = files).text
     

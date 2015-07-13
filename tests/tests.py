@@ -30,17 +30,32 @@ class TestDatabases(TestBase):
   def testCreate(self):
     self.wc.updateSettings(dbtables = "aaa|AAA")
     tables = self.wc.getTablesFromStats()
-    self.assertEquals(len(tables), 1)
-    self.assertEquals(tables[0], 'aaa')
+    self.assertEqual(len(tables), 1)
+    self.assertEqual(tables[0], 'aaa')
     
   def testCreateMultiple(self):
     self.wc.updateSettings(dbtables = "aaa|AAA\nbbb|BBB\nccc|CCC")
     tables = self.wc.getTablesFromStats()
-    self.assertEquals(len(tables), 3)
-    self.assertEquals(tables[0], 'aaa')
-    self.assertEquals(tables[1], 'bbb')
-    self.assertEquals(tables[2], 'ccc')
-
+    self.assertEqual(len(tables), 3)
+    self.assertEqual(tables[0], 'aaa')
+    self.assertEqual(tables[1], 'bbb')
+    self.assertEqual(tables[2], 'ccc')
+    
+  def testImport(self):
+    self.wc.importTickets('default', ['aaaaaa', 'bbbbbb', 'cccccc', 'dddddd'])
+    stats = self.wc.getStats('default')
+    self.assertEqual(stats['total'], 4)
+    self.assertEqual(stats['used'], 0)
+    self.assertEqual(stats['unused'], 4)
+    
+  def testPrint(self):  
+    self.wc.importTickets('default', ['aaaaaa', 'bbbbbb', 'cccccc', 'dddddd'])
+    self.wc.printPDF('default', 2)
+    stats = self.wc.getStats('default')
+    self.assertEqual(stats['total'], 4)
+    self.assertEqual(stats['used'], 2)
+    self.assertEqual(stats['unused'], 2)
+    
 class TestConfig(TestBase):
 
   def testSimpleConfigs(self):
