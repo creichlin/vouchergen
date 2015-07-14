@@ -75,4 +75,28 @@
   
   <button name="submit" type="submit" class="btn btn-primary">Save</button>
 </form>
+
+
+<h3>Configuration values</h3>
+
+<table class="table">
+  <tr>
+    <th>key</th>
+    <th>default</th>
+    <th>file</th>
+    <th>env</th>
+    <th>db</th>
+  </tr>
+  {% for element in all %}
+    <tr>
+      <td>{{ element.key }}</td>
+      <td>{{ element.default }}</td>
+      <td>{{ element.file }}</td>
+      <td>{{ element.env }}</td>
+      <td>{{ element.db }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+
 {% endblock %}

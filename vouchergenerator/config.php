@@ -39,5 +39,39 @@ $model['smsVoucherTable'] = $config->get('sms_voutbl');
 $model['smsText'] = $config->get('sms_text');
 $model['smsGatewayKey'] = $config->get('sms_gtwkey');
 
+$all = [];
+foreach($config->default as $key => $value) {
+  $f = $config->get($key, 'file');
+  $e = $config->get($key, 'env');
+  $d = $config->get($key, 'db');
+
+  if(!is_string($f)) {
+    $f = json_encode($f);
+  }
+
+  if(!is_string($e)) {
+    $e = json_encode($e);
+  }
+
+  if(!is_string($d)) {
+    $d = json_encode($d);
+  }
+
+  if(!is_string($value)) {
+    $value = json_encode($value);
+  }
+
+  $pw = strpos($key,'password') !== false;
+  $all[] = [
+    'key' => $key,
+    'default' => $pw ? "********": $value,
+    'file' => $pw && $f ? "********": $f,
+    'env' => $pw && $e ? "********": $e,
+    'db' => $pw && $d ? "********": $d,
+  ];
+}
+
+$model['all'] = $all;
+
 print($twig->render('settings.html', $model));
 ?>
