@@ -12,7 +12,7 @@ roadmap
   * add a bunch of tests (progressing...)
   * add templates for views (easier readable code) (done)
   * use pdo for db access (current mysql api deprecated, no transactions) (done)
-  * add transactions (currently there is a small chance that same key is sendt to multiple persons)
+  * add transactions (currently there is a small chance that same key is sendt to multiple persons) (done)
   * use prepared statement (to prevent sql injection) (done)
   * make country phone prefix code configurable
   * make config py env vars possible (config can be done in apache config file)
