@@ -3,7 +3,7 @@ require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
 require_once ("include/sms_api.php");
 
-$model['title'] = $lang->get("sms");
+$view->setTitle($lang->get("sms"));
 
 
 if(isset($_POST['config'])) {
@@ -39,8 +39,8 @@ if(isset($_POST['config'])) {
   }
 }
 
-$model['configs'] = $config->get('sms_gateway');
+$view->set('configs', $config->get('sms_gateway'));
 
-print($twig->render("sms.html", $model));
+$view->render("sms.html");
 
 ?>

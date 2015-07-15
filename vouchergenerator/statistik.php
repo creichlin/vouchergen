@@ -2,9 +2,7 @@
 require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
 
-$model['title'] = $lang->get("stats");
-
-
+$view->setTitle($lang->get("stats"));
 
 $statistics = [];
 
@@ -19,8 +17,8 @@ foreach($config->get('dbtables') as $key => $value) {
   $statistics[] = $element;
 }
 
-$model['statistics'] = $statistics;
+$view->set('statistics', $statistics);
 
-print($twig->render('statistics.html', $model));
+$view->render('statistics.html');
 ?>
 

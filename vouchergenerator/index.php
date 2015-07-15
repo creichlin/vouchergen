@@ -24,8 +24,7 @@ if(isset($_POST['submit_upload'])) {
   }
 }
 
-$model['title'] = $lang->get("vouchermgmt");
-
-print($twig->render('index.html', $model));
+$view->setTitle($lang->get("vouchermgmt"));
+$view->render('index.html');
 
 ?>

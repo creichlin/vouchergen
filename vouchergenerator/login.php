@@ -28,8 +28,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
-$model['title'] = 'Login';
+$view->setTitle('Login');
 
-print($twig->render('login.html', $model));
+$view->render('login.html', $model);
 
 ?>

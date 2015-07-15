@@ -1,6 +1,7 @@
 <?php
 require_once ("service/config.inc.php");
 require_once ("service/db.inc.php");
+require_once ("service/view.inc.php");
 
 // read config file and check if properly configured
 $config = new \config\Config("vogen");
@@ -29,25 +30,15 @@ foreach($config->get('dbtables') as $key => $value) {
 require_once ("lang.php");
 $lang = new aLang("main", "de");
 
-// load the twig stuff
-require_once ('Twig/Autoloader.php');
-Twig_Autoloader::register();
-
-$twigLoader = new Twig_Loader_Filesystem('templates');
-$twig = new Twig_Environment($twigLoader, array()
-// 'cache' => '/var/www/vou_twig_cache',
-);
+$view = new \view\View();
+$view->set('tables', $config->get('dbtables'));
 
 // probably best here ?
 session_start();
 
-// remplate model goes in here, will be used for rendering at the end
-$model = [];
-$model['tables'] = $config->get('dbtables');
-
 if(isset($_SESSION['angemeldet'])) {
   if($_SESSION['angemeldet']) {
-    $model['loggedIn'] = true;
+    $view->setLoggedIn();
   }
 }
 

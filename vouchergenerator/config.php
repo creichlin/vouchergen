@@ -29,13 +29,13 @@ if(isset($_POST['submit'])) {
 # they might have been changed above so update them
 $config->initDbValues($db->getSettings());
 
-$model['tables'] = $config->get('dbtables');
-$model['title'] = $lang->get("config");
-$model['tableHeaders'] = $config->get('tbl_header');
-$model['voucherHeading'] = $config->get('vou_header');
-$model['voucherText'] = $config->get('vou_text');
-$model['voucherLabel'] = $config->get('vou_label');
-$model['smsGateway'] = json_encode($config->get('sms_gateway'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$view->set('tables', $config->get('dbtables'));
+$view->set('title', $lang->get("config"));
+$view->set('tableHeaders', $config->get('tbl_header'));
+$view->set('voucherHeading', $config->get('vou_header'));
+$view->set('voucherText', $config->get('vou_text'));
+$view->set('voucherLabel', $config->get('vou_label'));
+$view->set('smsGateway', json_encode($config->get('sms_gateway'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
 $all = [];
 foreach($config->default as $key => $value) {
@@ -69,7 +69,7 @@ foreach($config->default as $key => $value) {
   ];
 }
 
-$model['all'] = $all;
+$view->set('all', $all);
 
-print($twig->render('settings.html', $model));
+$view->render('settings.html');
 ?>
