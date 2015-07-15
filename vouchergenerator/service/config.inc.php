@@ -30,9 +30,7 @@ class Config {
       "vou_header" => "VOU_HEADER",
       "vou_text" => "VOU_TEXT",
       "vou_label" => "VOU_LABEL",
-      "sms_voutbl" => "SMS_VOUTBL",
-      "sms_text" => "SMS_TEXT",
-      "sms_gtwkey" => "SMS_GTWKEY"
+      "sms_gateway" => [["label" => "Default","table" => "sms","countryPrefix" => "+41","example" => "079 123 45 67","text" => "Der code für das netz lala lautet {NUMBER}","validator" => "0[0-9]{9}","httpGet" => "http://www.sms-revolution.ch/API/httpsms.php?user=test&password=pw&text={TEXT}&to={NUMBER}&action=info"]]
   ];
 
   private $sources = [];
@@ -49,11 +47,7 @@ class Config {
     if(file_exists("/etc/vogen/{$this->name}")) {
       $data = parse_ini_file("/etc/vogen/{$this->name}");
       foreach($data as $key => $value) {
-        if(array_key_exists($key, $this->default)) {
-          $this->file[$key] = $value;
-        } else {
-          print("invalid config key: $key");
-        }
+        $this->set($key, $value, "file");
       }
     }
 
@@ -61,19 +55,32 @@ class Config {
     foreach($this->default as $key => $value) {
       $val = getenv("vg_$key");
       if($val) {
-        $this->env[$key] = $val;
+        $this->set($key, $val, 'env');
       }
+    }
+  }
+
+  /**
+   * to set a config key this method must be used
+   */
+  private function set($key, $value, $source) {
+    if(array_key_exists($key, $this->default)) {
+
+      // if value is a valid json string, convert it to json
+      if(json_decode($value, true) != NULL) {
+        $value = json_decode($value, true);
+      }
+
+      $this->sources[$source][$key] = $value;
+    } else {
+      print("invalid config key $key for source $source");
     }
   }
 
   function initDbValues($values) {
     $this->db = [];
     foreach($values as $key => $value) {
-      if(array_key_exists($key, $this->default)) {
-        $this->db[$key] = $value;
-      } else {
-        print("invalid db config key: $key");
-      }
+      $this->set($key, $value, 'db');
     }
   }
 

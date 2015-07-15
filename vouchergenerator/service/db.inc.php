@@ -7,6 +7,8 @@ class Db {
   function __construct($host, $username, $password, $schema) {
     $this->db = new \PDO("mysql:host=$host;dbname=$schema", $username, $password);
 
+    $this->query("SET NAMES utf8;");
+
     $tables = [];
     $result = $this->query("show tables");
     foreach($result as $row) {
@@ -14,11 +16,11 @@ class Db {
     }
 
     if(!in_array('sms_log', $tables)) {
-      $this->query("CREATE TABLE IF NOT EXISTS `sms_log` (`id` int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`)) ENGINE = INNODB;");
+      $this->query("CREATE TABLE IF NOT EXISTS `sms_log` (`id` int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
     }
 
     if(!in_array('voucher_settings', $tables)) {
-      $this->query("CREATE TABLE IF NOT EXISTS `voucher_settings` (`name` varchar(100) NOT NULL, `value` text NOT NULL) ENGINE = INNODB;");
+      $this->query("CREATE TABLE IF NOT EXISTS `voucher_settings` (`name` varchar(100) NOT NULL, `value` text NOT NULL) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
       $this->query("ALTER TABLE `voucher_settings` ADD PRIMARY KEY(`name`)");
     }
   }
@@ -107,8 +109,6 @@ class Db {
 
       foreach($settings_r as $row) {
         $settings[$row["name"]] = $row["value"];
-        if(json_decode($row["value"], true) != NULL)
-          $settings[$row["name"]] = json_decode($row["value"], true);
       }
       return $settings;
     });
@@ -150,7 +150,7 @@ class Db {
 
   function logNumber($empf) {
     $this->atomic(function () use($empf) {
-      $mysql = $this->db->mysql_query("SELECT timestamp FROM sms_log WHERE nummer = ?", [
+      $mysql = $this->query("SELECT timestamp FROM sms_log WHERE nummer = ?", [
           $empf
       ]);
       if(mysql_num_rows($mysql) > 0) { // Ist in Datenbank
@@ -158,7 +158,7 @@ class Db {
             $empf
         ]);
       } else {
-        $this->query("INSERT INTO smls_log (nummer, timestamp) VALUES(?, CURDATE())", [
+        $this->query("INSERT INTO sms_log (nummer, timestamp) VALUES(?, CURDATE())", [
             $empf
         ]);
       }
@@ -167,10 +167,10 @@ class Db {
 
   function numberIsNotLocked($empf) {
     return $this->atomic(function () use($empf) {
-      $mysql = $this->db->mysql_query('SELECT timestamp FROM sms_log WHERE nummer = ?', [
+      $mysql = $this->query('SELECT timestamp FROM sms_log WHERE nummer = ?', [
           $empf
       ]);
-      if($mysql->num_rows() > 0) { // Ist in Datenbank
+      if($mysql->rowCount() > 0) { // Ist in Datenbank
         while($row = $mysql->fetch()) {
           $data = $row['timestamp'];
         }

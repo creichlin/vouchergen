@@ -1,26 +1,53 @@
 <?php
+namespace sms;
 
-function send_code($empf) { // SMS verschicken
-  global $config, $db;
 
-  $ticketCode = $db->activateTickets($config->get('sms_voutbl'), 1)[0][1];
+class Sms {
 
-  $dest = "00491" . $empf; // Handynummer im int. Format zusammensetzen
+  private $config;
+  private $number;
+  private $valid = FALSE;
 
-  $text = $config->get('sms_text') . $data; // Text zusammensetzen
-  $text = urlencode($text); // Text URL-Encodieren
-  $fileOpenTRI = "https://www.smsflatrate.net/schnittstelle.php?key=" . $config->get('sms_gtwkey') . "&to=" . $dest . "&text=" . $text . "&type=20";
-  $gatewayAnswer = @file($fileOpenTRI); // SMS verschicken
-  return $gatewayAnswer[0]; // Antwort des Gateways zurÃ¼ckschicken
+
+  function __construct($config, $number) {
+    $this->config = $config;
+    $number = preg_replace("/[^0-9]/", '', $number);
+    $this->valid = preg_match("/^" . $this->config['validator'] . "$/", $number);
+    $number = preg_replace("/^0/", '', $number);
+    $this->number = $this->config['countryPrefix'] . $number;
+  }
+
+  function isValid() {
+    return $this->valid;
+  }
+
+  function send() {
+    global $db;
+    $ticketCodes = $db->activateTickets($this->config['table'], 1);
+    $text = preg_replace("/{TICKET}/", $ticketCodes[0][1], $this->config['text']);
+
+    $url = $this->config['httpGet'];
+
+    $url = preg_replace("/{TEXT}/", urlencode($text), $url);
+    $url = preg_replace("/{NUMBER}/", urlencode($this->number), $url);
+
+    $gatewayAnswer = @file($url);
+  }
+
+  function getNumber() {
+    return $this->number;
+  }
+
+  function isLocked() {
+    global $db;
+    return  $db->numberIsNotLocked($this->number);
+  }
+
+  function block() {
+    global $db;
+    return  $db->logNumber($this->number);
+  }
 }
 
-function verify_number($empf) {
-  global $db;
-  return $db->numberIsNotLocked();
-}
 
-function block_number($empf) {
-  global $db;
-  $db->logNumber($empf);
-}
 ?>

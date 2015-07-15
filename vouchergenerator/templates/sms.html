@@ -3,18 +3,24 @@
 
 {% block content %}
 
-  <form class="sms" action="sms.php" method="post">
-    <div class="form-group">
-      <label for="nummer">Mobile nummer</label>
-      <input name="nummer" value="" type="text"  class="form-control"/>
-    </div>
+  {% for config in configs %}
+    <h2>{{ config.label }}</h2>
     
-    <div class="btn-group btn-group-vertical" role="group">
-      <button name="test" type="submit" class="btn btn-primary">Test</button>
-      <button name="send" type="submit" class="btn btn-primary">Send ticket</button>
-      <button name="block" type="submit" class="btn btn-primary">Block number</button>
-    </div>
-  </form>
+    <form class="sms" action="sms.php" method="post">
+      <div class="form-group">
+        <label for="nummer">Mobile nummer</label>
+        <input name="nummer" value="" type="text" placeholder="{{ config.example }}" class="form-control"/>
+      </div>
+      
+      <div class="btn-group btn-group-vertical" role="group">
+        <button name="test" type="submit" class="btn btn-primary">Test</button>
+        <button name="send" type="submit" class="btn btn-primary">Send ticket</button>
+        <button name="block" type="submit" class="btn btn-primary">Block number</button>
+      </div>
+      <input type="hidden" name="config" value={{ loop.index0 }}/>
+    </form>
+  
+  {% endfor %}
 
 
 {% endblock %}
