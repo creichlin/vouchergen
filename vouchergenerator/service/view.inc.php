@@ -16,10 +16,28 @@ class View {
 
     $twigLoader = new \Twig_Loader_Filesystem('templates');
     $this->twig = new \Twig_Environment($twigLoader, array());
+
+    $this->model['messages'] = [];
   }
 
   function setTitle($title) {
     $this->set('title', $title);
+  }
+
+  function addWarning($key) {
+    $this->model['messages'][] = [
+      'type' => 'warning',
+      'key' => $key,
+      'message' => $key
+    ];
+  }
+
+  function addInfo($key) {
+    $this->model['messages'][] = [
+      'type' => 'info',
+      'key' => $key,
+      'message' => $key
+    ];
   }
 
   function set($key, $value) {

@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("Location: http://$host$uri/$extra");
     exit();
   } else {
-    $model['message'] = "Es ist ein Fehler aufgetreten.";
+    $view->addWarning("login-error");
   }
 }
 

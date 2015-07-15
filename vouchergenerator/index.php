@@ -8,7 +8,7 @@ require_once ("include/auth.inc.php");
 // delete table action
 if(isset($_POST['submit_delete'])) {
   $db->deleteAllRows($_POST['select_delete']);
-  $model["message"] = $lang->get("message_db_del");
+  $view->addInfo('db-deleted');
 }
 // upload tickets into database
 if(isset($_POST['submit_upload'])) {
@@ -20,9 +20,13 @@ if(isset($_POST['submit_upload'])) {
       $value = trim(str_replace('"', '', $value)); // remove " and leading space
       $db->addTicketToTable($_POST['select_upload'], $value);
     }
-    $model["message"] = $lang->get("message_upload_succeed");
+    $view->addInfo('upload-succeded');
   }
 }
+
+$view->addInfo('info-message');
+$view->addWarning('warning-message');
+
 
 $view->setTitle($lang->get("vouchermgmt"));
 $view->render('index.html');

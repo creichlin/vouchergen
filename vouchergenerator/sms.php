@@ -13,28 +13,28 @@ if(isset($_POST['config'])) {
   $sms = new \sms\Sms($conf, $_POST['nummer']);
 
   if(!$sms->isValid()) {
-    $model['message'] = "Invalid number";
+    $view->addWarning("invalid-number");
   } else {
 
     // check if number is locked
     if(isset($_POST['test'])) {
-      if(!$sms->isLocked()) {
-        $model['message'] = "$number is allowed";
+      if($sms->isLocked()) {
+        $view->addInfo('number-is-not-allowed');
       } else {
-        $model['message'] = "$number is not allowed";
+        $view->addInfo('number-is-allowed');
       }
     }
 
     // Nummer blocken
     if(isset($_POST['block'])) {
       $sms->block($number);
-      $model['message'] = "blocked number $number";
+      $view->addInfo('blocked-number');
     }
 
     // send code to number
     if(isset($_POST['send'])) {
       $sms->send();
-      $model['message'] = "sendt sms to number $number";
+      $view->addInfo("sendt-sms");
     }
   }
 }
