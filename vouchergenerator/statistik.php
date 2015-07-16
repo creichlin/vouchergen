@@ -2,8 +2,6 @@
 require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
 
-$view->setTitle($lang->get("stats"));
-
 $statistics = [];
 
 foreach($config->get('dbtables') as $key => $value) {

@@ -3,8 +3,6 @@ require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
 require_once ("include/sms_api.php");
 
-$view->setTitle($lang->get("sms"));
-
 if(isset($_POST['config'])) {
   // get config and number
   $conf = $config->get('sms_gateway')[intval($_POST['config'])];

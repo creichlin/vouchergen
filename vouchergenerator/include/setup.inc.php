@@ -33,12 +33,6 @@ foreach($config->get('dbtables') as $key => $value) {
   $db->createTicketTable($key);
 }
 
-
-
-// set up localization
-require_once ("lang.php");
-$lang = new aLang("main", "de");
-
 $view = new \view\View();
 $view->set('tables', $config->get('dbtables'));
 

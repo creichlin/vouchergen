@@ -3,6 +3,7 @@
 namespace view;
 
 require_once('include/Twig/Autoloader.php');
+require_once ("include/lang.php");
 
 
 class View {
@@ -29,10 +30,8 @@ class View {
     $this->model['messages'] = [];
 
     $this->i18n = new \aLang("view", "en");
-  }
 
-  function setTitle($title) {
-    $this->set('title', $title);
+    $this->model['title'] = basename($_SERVER['PHP_SELF'], ".php") . "-title";
   }
 
   private function addMessage($type, $key, $model = []) {

@@ -30,7 +30,6 @@ if(isset($_POST['submit'])) {
 $config->initDbValues($db->getSettings());
 
 $view->set('tables', $config->get('dbtables'));
-$view->set('title', $lang->get("config"));
 $view->set('tableHeaders', $config->get('tbl_header'));
 $view->set('voucherHeading', $config->get('vou_header'));
 $view->set('voucherText', $config->get('vou_text'));

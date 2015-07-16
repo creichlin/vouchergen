@@ -41,7 +41,6 @@ if(isset($_POST['submit_upload'])) {
   }
 }
 
-$view->setTitle($lang->get("vouchermgmt"));
 $view->render('index.html');
 
 ?>

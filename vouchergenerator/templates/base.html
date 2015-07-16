@@ -12,7 +12,7 @@
     <script src="bootstrap/bootstrap.min.js"></script>
   
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <title>Vogen {{title}}</title>
+    <title>Vogen {{ title|i18n }}</title>
   </head>
   
   <body>
@@ -21,7 +21,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/">Vogen</a>
+          <a class="navbar-brand" href="/">Vogen {{ title|i18n }}</a>
         </div>
         {% if loggedIn %}
           <ul class="nav navbar-nav navbar-right">
