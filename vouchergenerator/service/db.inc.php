@@ -15,8 +15,12 @@ class Db {
       $tables[] = $row[0];
     }
 
-    if(!in_array('sms_log', $tables)) {
+      if(!in_array('sms_log', $tables)) {
       $this->query("CREATE TABLE IF NOT EXISTS `sms_log` (`id` int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
+    }
+
+    if(!in_array('test_sms', $tables)) {
+      $this->query("CREATE TABLE IF NOT EXISTS `test_sms` (`id` int(11) NOT NULL auto_increment, `number` text NOT NULL, `text` text not null, `date` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
     }
 
     if(!in_array('voucher_settings', $tables)) {
@@ -72,6 +76,22 @@ class Db {
       $this->query("INSERT INTO " . $this->quote($table) . " VALUES ('', ?, '0')", [
           $value
       ]);
+    });
+  }
+
+  function addSms($number, $text) {
+    $this->atomic(function () use($number, $text) {
+      $this->query("insert into test_sms (number, `text`, `date`) values(?, ?, curdate());", [$number, $text]);
+    });
+  }
+
+  function getAllSms() {
+    return $this->atomic(function () {
+      $sms = [];
+      foreach($this->query("select * from test_sms;") as $row) {
+        $sms[] = ['number' => $row['number'], 'text' => $row['text']];
+      }
+      return $sms;
     });
   }
 
@@ -153,11 +173,11 @@ class Db {
       $mysql = $this->query("SELECT timestamp FROM sms_log WHERE nummer = ?", [
           $empf
       ]);
-      if(mysql_num_rows($mysql) > 0) { // Ist in Datenbank
+      if($mysql->fetch()) { // is it in the db? update it
         $this->query("UPDATE sms_log SET timestamp = CURDATE() WHERE nummer = ?;", [
             $empf
         ]);
-      } else {
+      } else { // otherwise create it anew
         $this->query("INSERT INTO sms_log (nummer, timestamp) VALUES(?, CURDATE())", [
             $empf
         ]);

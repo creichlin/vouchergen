@@ -5,7 +5,6 @@ require_once ("include/sms_api.php");
 
 $view->setTitle($lang->get("sms"));
 
-
 if(isset($_POST['config'])) {
   // get config and number
   $conf = $config->get('sms_gateway')[intval($_POST['config'])];
@@ -13,7 +12,7 @@ if(isset($_POST['config'])) {
   $sms = new \sms\Sms($conf, $_POST['nummer']);
 
   if(!$sms->isValid()) {
-    $view->addWarning("invalid-number");
+    $view->addWarning("invalid-mobile-number");
   } else {
 
     // check if number is locked
@@ -33,8 +32,14 @@ if(isset($_POST['config'])) {
 
     // send code to number
     if(isset($_POST['send'])) {
-      $sms->send();
-      $view->addInfo("sendt-sms");
+      try {
+        $sms->send();
+        $view->addInfo("sendt-sms");
+      } catch(\sms\NoUnusedTicketsException $e) {
+        $view->addInfo("no-unused-tickets");
+      } catch(\sms\NumberIsLockedException $e) {
+        $view->addInfo("number-is-locked");
+      }
     }
   }
 }

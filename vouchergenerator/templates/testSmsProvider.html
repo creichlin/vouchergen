@@ -1,0 +1,6 @@
+{% for message in sms %}
+  <div class="message">
+    <div class="number">{{message.number}}</div>
+    <div class="text">{{message.text}}</div>
+  </div>
+{% endfor %}

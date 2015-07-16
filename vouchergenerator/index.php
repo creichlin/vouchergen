@@ -24,10 +24,6 @@ if(isset($_POST['submit_upload'])) {
   }
 }
 
-$view->addInfo('info-message');
-$view->addWarning('warning-message');
-
-
 $view->setTitle($lang->get("vouchermgmt"));
 $view->render('index.html');
 

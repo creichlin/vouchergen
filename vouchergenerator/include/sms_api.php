@@ -1,12 +1,15 @@
 <?php
 namespace sms;
 
+class NoUnusedTicketsException extends \Exception { }
+class NumberIsLockedException extends \Exception { }
 
 class Sms {
 
   private $config;
   private $number;
   private $valid = FALSE;
+  private $answer;
 
 
   function __construct($config, $number) {
@@ -23,7 +26,18 @@ class Sms {
 
   function send() {
     global $db;
+
+    if($this->isLocked()) {
+      throw new NumberIsLockedException();
+    }
+
     $ticketCodes = $db->activateTickets($this->config['table'], 1);
+
+    if(count($ticketCodes) == 0) {
+      throw new NoUnusedTicketsException();
+    }
+
+
     $text = preg_replace("/{TICKET}/", $ticketCodes[0][1], $this->config['text']);
 
     $url = $this->config['httpGet'];
@@ -31,7 +45,9 @@ class Sms {
     $url = preg_replace("/{TEXT}/", urlencode($text), $url);
     $url = preg_replace("/{NUMBER}/", urlencode($this->number), $url);
 
-    $gatewayAnswer = @file($url);
+    $this->answer = @file($url);
+
+    $this->block();
   }
 
   function getNumber() {
@@ -40,12 +56,16 @@ class Sms {
 
   function isLocked() {
     global $db;
-    return  $db->numberIsNotLocked($this->number);
+    return !$db->numberIsNotLocked($this->number);
   }
 
   function block() {
     global $db;
-    return  $db->logNumber($this->number);
+    return $db->logNumber($this->number);
+  }
+
+  function getAnswer() {
+    return $this->answer;
   }
 }
 

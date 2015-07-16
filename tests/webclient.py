@@ -48,6 +48,25 @@ class WebClient():
         
     self.__post("config.php", data)
     
+  def sendSms(self, number):
+    """ send an sms in the sms test screen """
+    return self.__postAsSoup('sms.php', {'send': '', 'config': '0', 'nummer': number})
+    
+  def isLocked(self, number):
+    """ check if phine number is locked """
+    soup = self.__postAsSoup('sms.php', {'test': '', 'config': '0', 'nummer': number})
+    return not not soup.find("div", {'message-id': 'number-is-not-allowed'})
+    
+    
+  def getSendtSms(self):  
+    """ fetch sendt sms from the sms test provider screen """
+    soup = self.__getAsSoup('testSmsProvider.php')
+    entries = []
+    for entry in soup.select('.message'):
+      entries.append(MessageEntry(entry.select('.number')[0].get_text()))
+    
+    return entries
+    
   def getSettings(self):
     """ get all settings from webinterface and returns them in a dict """
     soup = self.__getAsSoup("config.php")
@@ -107,3 +126,14 @@ class WebClient():
   def __post(self, url, data, files = {}, **kwargs):
     return self.session.post(self.__buildUrl(url, **kwargs), data = data, files = files).text
     
+  def __postAsSoup(self, url, data, files = {}, **kwargs):
+    response = self.__post(url, data, files, **kwargs)
+    return BeautifulSoup(response)
+    
+
+
+
+class MessageEntry():
+  def __init__(self, number):
+    self.number = number
+
