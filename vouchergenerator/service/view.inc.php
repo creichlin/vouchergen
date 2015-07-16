@@ -35,20 +35,29 @@ class View {
     $this->set('title', $title);
   }
 
-  function addWarning($key) {
+  private function addMessage($type, $key, $model = []) {
+    $message = $this->i18n->get($key);
+
+    // micro template engine
+    if (preg_match_all("/{{(.*?)}}/", $message, $m)) {
+      foreach ($m[1] as $i => $varname) {
+        $message = str_replace($m[0][$i], sprintf('%s', $model[$varname]), $message);
+      }
+    }
+
     $this->model['messages'][] = [
       'type' => 'warning',
       'key' => $key,
-      'message' => $key
+      'message' => $message
     ];
   }
 
-  function addInfo($key) {
-    $this->model['messages'][] = [
-      'type' => 'info',
-      'key' => $key,
-      'message' => $key
-    ];
+  function addWarning($key, $model = []) {
+    $this->addMessage("warning", $key, $model);
+  }
+
+  function addInfo($key, $model = []) {
+    $this->addMessage("info", $key, $model);
   }
 
   function set($key, $value) {

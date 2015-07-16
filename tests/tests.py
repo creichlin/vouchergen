@@ -61,7 +61,7 @@ class TestSms(TestBase):
     self.wc.sendSms('079 123 45 67')
     result = self.wc.sendSms('079 123 45 67')
 
-    self.assertIsNotNone(result.find("div", {'message-id': 'number-is-locked'}))
+    self.assertIsNotNone(result.find("div", {'message-id': 'number-is-blocked'}))
     
   def testIfSendtSmsIsLocked(self):
     self.wc.importTickets('sms', ['aaaaaa'])

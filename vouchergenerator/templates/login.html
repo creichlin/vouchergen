@@ -4,12 +4,12 @@
 {% block content %}
 
   <form action="login.php" class="login" method="post">
-    <h2 class="form-signin-heading">Please sign in</h2>
-    <label for="username" class="sr-only">Username</label>
-    <input type="text" class="form-control" name="username" placeholder="Username" required autofocus/>
-    <label for="passwort" class="sr-only">Password</label>
-    <input type="password" class="form-control" name="passwort" placeholder="Password" required/>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <h2 class="form-signin-heading">{{ "login-message"|i18n }}</h2>
+    <label for="username" class="sr-only">{{ "login-username"|i18n }}</label>
+    <input type="text" class="form-control" name="username" placeholder="{{ "login-username"|i18n }}" required autofocus/>
+    <label for="passwort" class="sr-only">{{ "login-password"|i18n }}</label>
+    <input type="password" class="form-control" name="passwort" placeholder="{{ "login-password"|i18n }}" required/>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">{{ "login-button"|i18n }}</button>
   </form>
 
 {% endblock %}

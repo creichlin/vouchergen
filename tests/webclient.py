@@ -64,7 +64,7 @@ class WebClient():
   def isLocked(self, number):
     """ check if phine number is locked """
     soup = self.__postAsSoup('sms.php', {'test': '', 'config': '0', 'nummer': number})
-    return not not soup.find("div", {'message-id': 'number-is-not-allowed'})
+    return not not soup.find("div", {'message-id': 'number-is-blocked'})
     
     
   def getSendtSms(self):  
