@@ -10,18 +10,18 @@
         <div class="panel-body">      
           <form method="post" action="print.php">
             <div class="form-group">
-              <label for="number">Number of vouchers</label>
-              <input name="number" value="24" type="text" class="form-control"/>
-            </div>
-            <div class="form-group">
-              <label for="select_print">Database</label>
+              <label for="select_print">{{ "select-database"|i18n}}</label>
               <select name="select_print" class="form-control">
                 {% for id, name in tables %}
                   <option value="{{id}}">{{name}}</option>'
                 {% endfor %}
               </select>
             </div>
-            <input name="submit_print" type="submit" class="btn btn-primary" value="Create PDF" />
+            <div class="form-group">
+              <label for="number">{{ "generate-pdf-number"|i18n }}</label>
+              <input name="number" value="24" type="text" class="form-control"/>
+            </div>
+            <button name="submit_print" type="submit" class="btn btn-primary">{{ "generate-pdf-button"|i18n }}</button>
           </form>
         </div>
       </div>
@@ -33,7 +33,7 @@
         <div class="panel-body">
           <form action="index.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
-              <label for="select_upload">Database</label>
+              <label for="select_upload">{{ "select-database"|i18n}}</label>
               <select name="select_upload" class="form-control">
                 {% for id, name in tables %}
                   <option value="{{id}}">{{name}}</option>'
@@ -42,10 +42,10 @@
             </div>
             
             <div class="form_group">
-              <label for="datei">Select file</label>
+              <label for="datei">{{ "select-file"|i18n }}</label>
               <input id="cvs-upload" type="file" name="datei"/>
             </div>
-            <input type="submit" name="submit_upload" class="btn btn-primary" value="Upload" />
+            <button type="submit" name="submit_upload" class="btn btn-primary">{{ "upload-csv-button"|i18n }}</button>
           </form>
         </div>
       </div>
@@ -53,19 +53,19 @@
     
     <div class="col-md-4">
       <div class="panel panel-default">
-        <div class="panel-heading">{{ "delete-database"|i18n }}</div>
+        <div class="panel-heading">{{ "clear-database"|i18n }}</div>
         <div class="panel-body">      
           <form method="post" action="index.php">
             <div class="form-group">
-              <label for="select_delete">Database</label>
+              <label for="select_delete">{{ "select-database"|i18n}}</label>
               <select name="select_delete" class="form-control">
                 {% for id, name in tables %}
                   <option value="{{id}}">{{name}}</option>'
                 {% endfor %}
               </select>
             </div>
-            <input name="submit_delete" type="submit"  class="btn btn-primary"
-              value="Datenbank löschen" onclick="return window.confirm('Are you sure?');" />
+            <button name="submit_delete" type="submit"  class="btn btn-primary"
+              onclick="return window.confirm('{{ "clear-database-confirm"|i18n }}');">{{ "clear-database-button"|i18n }}</button>
           </form>
         </div>
       </div>

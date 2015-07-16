@@ -16,17 +16,26 @@ class WebClient():
     self.__login()
     
   def importTickets(self, db, tickets):
-    file = "#\n" * 7
     
-    for t in tickets:
-      file += '" ' + t + '"\n'
+    file = None
+    
+    if isinstance(tickets, str):
+      file = tickets
+    elif isinstance(tickets, (list, tuple)):
+      file = "#\n" * 7
+      
+      for t in tickets:
+        file += '" ' + t + '"\n'
     
     data = {
             'select_upload': db,
             'submit_upload': 'upload'
             }
+    files = {}
+    if file != None:
+      files['datei'] = ('file.csv', file)
     
-    self.__post("index.php", data, files = {'datei': ('file.csv', file)})
+    return self.__postAsSoup("index.php", data, files = files)
     
   def printPDF(self, table, number):
     data = {

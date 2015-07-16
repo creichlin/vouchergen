@@ -3,6 +3,15 @@ require_once ("service/config.inc.php");
 require_once ("service/db.inc.php");
 require_once ("service/view.inc.php");
 
+set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontext) {
+  // error was suppressed with the @-operator
+  if (0 === error_reporting()) {
+    return false;
+  }
+
+  throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
 // read config file and check if properly configured
 $config = new \config\Config("vogen");
 

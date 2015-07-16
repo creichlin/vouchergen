@@ -27,9 +27,9 @@ class Config {
           "C",
           "D"
       ],
-      "vou_header" => "VOU_HEADER",
-      "vou_text" => "VOU_TEXT",
-      "vou_label" => "VOU_LABEL",
+      "vou_header" => "WLAN Ticket",
+      "vou_text" => "connecto to guestweb",
+      "vou_label" => "Code ",
       "sms_gateway" => [["label" => "Default","table" => "sms","countryPrefix" => "+41","example" => "079 123 45 67","text" => "Der code für das netz lala lautet {NUMBER}","validator" => "0[0-9]{9}","httpGet" => "http://www.sms-revolution.ch/API/httpsms.php?user=test&password=pw&text={TEXT}&to={NUMBER}&action=info"]]
   ];
 

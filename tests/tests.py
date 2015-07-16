@@ -91,6 +91,15 @@ class TestDatabases(TestBase):
     self.assertEqual(stats['total'], 4)
     self.assertEqual(stats['used'], 0)
     self.assertEqual(stats['unused'], 4)
+    
+  def testImportEmptyFile(self):
+    # can not be tested properly, can't reconstruct exact post
+    soup = self.wc.importTickets('default', "")
+    self.assertIsNotNone(soup.find("div", {"message-id": "invalid-csv-export-message"}))
+
+  def testImportInvalidFile(self):
+    soup = self.wc.importTickets('default', "this\nis\nno\nvalid\ncvs\nfile\n\sdsa\nfoo\nbar\nend")
+    self.assertIsNotNone(soup.find("div", {"message-id": "invalid-csv-export-message"}))
 
   def testPrint(self):
     self.wc.importTickets('default', ['aaaaaa', 'bbbbbb', 'cccccc', 'dddddd'])
