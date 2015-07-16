@@ -15,9 +15,9 @@ roadmap
   * use prepared statement (to prevent sql injection) (done)
   * make config py env vars possible (config can be done in apache config file) (done)
   * make current config which is in db configurable by config file or env vars or remain in db (deploy can be easier made automatically) (done)
+  * integrate i18n into templates (done)
   * add a bunch of tests (progressing...)
   * make userinterface beautiful and consolidated (progressing...)
   * search for new name
-  * integrate i18n into templates
   * make country phone prefix code configurable
  

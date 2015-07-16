@@ -11,28 +11,28 @@ class aLang {
 	 * @var string
 	 */
 	var $section = "";
- 
+
 	/**
 	 * saves current language
 	 *
 	 * @var string
 	 */
 	var $lang = "";
- 
+
 	/**
 	 * where do i find the language inis
 	 *
 	 * @var string
 	 */
 	var $path = "include/lang/";
- 
+
 	/**
 	 * parsed ini array
 	 *
 	 * @var array
 	 */
 	var $parsed = array();
- 
+
 	/**
 	 * setup the class
 	 *
@@ -43,14 +43,14 @@ class aLang {
 	function aLang($section, $language, $path="") {
 		$this->section = $section;
 		$this->lang = $language;
- 
+
 		if (!empty($path)) {
 			$this->path = $path;
 		}
- 
+
 		$this->parse();
 	}
- 
+
 	/**
 	 * parse the language file
 	 *
@@ -59,17 +59,17 @@ class aLang {
 		$filename = $this->path.$this->lang.".ini";
 		$cachedata = $this->path.$this->lang.".cachedata";
 		$cachearray = $this->path.$this->lang.".cachearray";
- 
+
 		if (!file_exists($filename)) {
 			die("aLang Error: Language File for $this->lang doesn't exist!");
 		}
- 
+
 		// caching system
 		$ini_size = filesize($filename);
- 
+
 		if (file_exists($cachedata) && file_exists($cachearray)) {
 			$cachesize = implode ('', file ($cachedata));
- 
+
 			if ($ini_size != $cachesize) { // reparse
 				$this->reparse($filename);
 			}
@@ -82,7 +82,7 @@ class aLang {
 			$this->reparse($filename);
 		}
 	}
- 
+
 	/**
 	 * parse ini file and write cache
 	 *
@@ -91,16 +91,16 @@ class aLang {
 	function reparse($fname) {
 		$this->parsed = parse_ini_file($fname, true);
 		$ini_size = filesize($fname);
- 
+
 		$fp = @fopen($this->path.$this->lang.".cachedata", "w+");
 		@fwrite($fp, $ini_size);
 		@fclose($fp);
- 
+
 		$fp = @fopen($this->path.$this->lang.".cachearray", "w+");
 		@fwrite($fp, base64_encode(serialize($this->parsed)));
 		@fclose($fp);
 	}
- 
+
 	/**
 	 * grab translation
 	 *
@@ -109,11 +109,11 @@ class aLang {
 	 */
 	function get($varname) {
 		if (!isset($this->parsed[$this->section][$varname])) {
-			die("aLang Error: $this->section[$varname] not found!");
+			return "[$varname]";
 		}
 		return $this->parsed[$this->section][$varname];
 	}
- 
+
 	/**
 	 * grab translation out of specified section
 	 *
@@ -125,7 +125,7 @@ class aLang {
 		if (!isset($this->parsed[$section][$varname])) {
 			die("aLang Error: $section[$varname] not found!");
 		}
- 
+
 		return $this->parsed[$section][$varname];
 	}
 }

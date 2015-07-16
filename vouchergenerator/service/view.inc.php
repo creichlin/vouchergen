@@ -7,6 +7,7 @@ require_once('include/Twig/Autoloader.php');
 
 class View {
 
+  private $i18n;
   private $twig;
   private $model = [];
 
@@ -17,7 +18,17 @@ class View {
     $twigLoader = new \Twig_Loader_Filesystem('templates');
     $this->twig = new \Twig_Environment($twigLoader, array());
 
+
+
+    $filter = new \Twig_SimpleFilter('i18n', function ($string) {
+      return $this->i18n->get($string);
+    });
+
+    $this->twig->addFilter($filter);
+
     $this->model['messages'] = [];
+
+    $this->i18n = new \aLang("view", "en");
   }
 
   function setTitle($title) {
