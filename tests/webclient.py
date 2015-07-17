@@ -55,7 +55,7 @@ class WebClient():
       else:
         data[name] = value
         
-    self.__post("config.php", data)
+    self.__post("settings.php", data)
     
   def sendSms(self, number):
     """ send an sms in the sms test screen """
@@ -78,7 +78,7 @@ class WebClient():
     
   def getSettings(self):
     """ get all settings from webinterface and returns them in a dict """
-    soup = self.__getAsSoup("config.php")
+    soup = self.__getAsSoup("settings.php")
     data = {}
     
     for input in soup.select("input"):
@@ -90,14 +90,14 @@ class WebClient():
     return data
   
   def getTablesFromStats(self):
-    soup = self.__getAsSoup("statistik.php")
+    soup = self.__getAsSoup("statistics.php")
     tables = []
     for row in soup.select('table > tr')[1:]:
       tables.append(row['table-id'])
     return tables
   
   def getStats(self, table):
-    soup = self.__getAsSoup("statistik.php")
+    soup = self.__getAsSoup("statistics.php")
     selector = 'tr[table-id=%s]' % (table, )
     row = soup.find("tr", {'table-id': table}).findAll("td")
     

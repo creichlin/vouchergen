@@ -13,7 +13,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontex
 });
 
 // read config file and check if properly configured
-$config = new \config\Config("vogen");
+$config = new \config\Config("captivout");
 
 if(!$config->has("username") || !$config->has("password")) {
   die("please create config file with at least username and password");

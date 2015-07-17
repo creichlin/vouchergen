@@ -12,7 +12,7 @@
     <script src="bootstrap/bootstrap.min.js"></script>
   
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <title>Vogen {{ title|i18n }}</title>
+    <title>Captivout - {{ title|i18n }}</title>
   </head>
   
   <body>
@@ -21,14 +21,14 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <span class="navbar-brand">Vogen {{ title|i18n }}</span>
+          <span class="navbar-brand">Captivout - {{ title|i18n }}</span>
         </div>
         {% if loggedIn %}
           <ul class="nav navbar-nav navbar-right">
             <li><a href="index.php">{{ "index-title"|i18n }}</a></li>
-            <li><a href="statistik.php">{{ "statistics-title"|i18n }}</a></li>
+            <li><a href="statistics.php">{{ "statistics-title"|i18n }}</a></li>
             <li><a href="sms.php">{{ "sms-title"|i18n }}</a></li>
-            <li><a href="config.php">{{ "config-title"|i18n }}</a></li>
+            <li><a href="settings.php">{{ "settings-title"|i18n }}</a></li>
             <li><a href="logout.php">{{ "logout-title"|i18n }}</a></li>
           </ul>
         {% endif %}
@@ -51,7 +51,7 @@
     
     <footer class="footer">
       <div class="container">
-        <div class="center">GuestTickets, based on vouchergen</div>
+        <div class="center">Captivout, based on vouchergen</div>
       </div>
     </footer>
   </body>

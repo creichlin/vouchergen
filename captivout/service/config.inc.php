@@ -44,8 +44,8 @@ class Config {
     $this->sources['db'] = &$this->db;
 
     // read values from config file
-    if(file_exists("/etc/vogen/{$this->name}")) {
-      $data = parse_ini_file("/etc/vogen/{$this->name}");
+    if(file_exists("/etc/captivout/{$this->name}")) {
+      $data = parse_ini_file("/etc/captivout/{$this->name}");
       foreach($data as $key => $value) {
         $this->set($key, $value, "file");
       }

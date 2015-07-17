@@ -1,5 +1,5 @@
-vouchergen
-==========
+captivout
+=========
 
 based of http://sourceforge.net/projects/vouchergen/
 
@@ -19,5 +19,5 @@ roadmap
   * make country phone prefix code configurable
   * add a bunch of tests (progressing...)
   * make userinterface beautiful (done) and consolidated (progressing...)
-  * search for new name
+  * search for new name (done)
  
