@@ -64,6 +64,11 @@ class Sms {
     return $db->logNumber($this->number);
   }
 
+  function unblock() {
+    global $db;
+    return $db->removeLog($this->number);
+  }
+
   function getAnswer() {
     return $this->answer;
   }

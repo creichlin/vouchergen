@@ -28,6 +28,12 @@ if(isset($_POST['config'])) {
       $view->addInfo('number-blocked', ['number' => $sms->getNumber()]);
     }
 
+    // unblock number
+    if(isset($_POST['unblock'])) {
+      $sms->unblock();
+      $view->addInfo('number-unblocked', ['number' => $sms->getNumber()]);
+    }
+
     // send code to number
     if(isset($_POST['send'])) {
       try {

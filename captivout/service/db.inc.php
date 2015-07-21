@@ -185,6 +185,14 @@ class Db {
     });
   }
 
+  function removeLog($number) {
+    $this->atomic(function () use($number) {
+      $mysql = $this->query("delete from sms_log WHERE nummer = ?", [
+          $number
+          ]);
+    });
+  }
+
   function numberIsNotLocked($empf) {
     return $this->atomic(function () use($empf) {
       $mysql = $this->query('SELECT timestamp FROM sms_log WHERE nummer = ?', [
