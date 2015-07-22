@@ -1,26 +1,19 @@
-<?php
-require("globals.inc");
-
-$pr = urlencode("$PORTAL_REDIRURL$");
-
-?>
-
 <html>
   <head>
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      //echo('<meta http-equiv="refresh" content="0; url=http://google.com" />');
+      echo('<meta http-equiv="refresh" content="0; url=' . $_POST['pr'] . '" />');
     } else {
-      //echo('<meta http-equiv="refresh" content="0; url=http://172.20.88.11/requestSms.php?pa=$PORTAL_ACTION$&pr=$PORTAL_REDIRURL$" />');
+      echo('<meta http-equiv="refresh" content="0; url=http://172.20.88.11/requestSms.php?$PORTAL_ACTION$[DEL]$PORTAL_REDIRURL$" />');
     }
     ?>
   </head>
   <body>
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      echo('<a href="http://google.com">go to google</a>');
+      echo('<a href="' . $_POST['pr'] . '">continue</a>');
     } else {
-      echo('<a href="http://172.20.88.11/requestSms.php?pa=$PORTAL_ACTION$&pr=$PORTAL_REDIRURL$">go to authentication page</a>');
+      echo('<a href="http://172.20.88.11/requestSms.php?$PORTAL_ACTION$[DEL]$PORTAL_REDIRURL$">go to authentication page</a>');
     }
     ?>
 

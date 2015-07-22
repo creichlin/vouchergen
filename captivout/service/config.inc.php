@@ -30,7 +30,7 @@ class Config {
       "vou_header" => "WLAN Ticket",
       "vou_text" => "connecto to guestweb",
       "vou_label" => "Code ",
-      "sms_gateway" => [["label" => "Default","table" => "sms","countryPrefix" => "+41","example" => "079 123 45 67","text" => "Der code für das netz lala lautet {NUMBER}","validator" => "0[0-9]{9}","httpGet" => "http://www.sms-revolution.ch/API/httpsms.php?user=test&password=pw&text={TEXT}&to={NUMBER}&action=info"]]
+      "sms_gateway" => [["label" => "Default","table" => "sms","countryPrefix" => "+41","example" => "079 123 45 67","text" => "Der code für das netz lala lautet {TICKET}","validator" => "0[0-9]{9}","httpGet" => "http://www.sms-revolution.ch/API/httpsms.php?user=test&password=pw&text={TEXT}&to={NUMBER}&action=info"]]
   ];
 
   private $sources = [];

@@ -38,12 +38,13 @@
 
       <div class="panel panel-default sms-request">
         <div class="panel-body">
-          <form method="post" action="requestSms.php">
+          <form method="post" action="{{ portalAction }}">
             <div class="form-group">
               <label>{{ "request-sms-code"|i18n }}</label>
-              <input name="nummer" value="" class="form-control" type="text" />
+              <input name="auth_voucher" value="" class="form-control" type="text" />
             </div>
-            <button name="submit" type="submit" class="btn btn-primary btn-block">{{ "request-sms-unlock"|i18n }}</button>
+            <input type="hidden" name="redirurl" value="{{portalRedirect}}"/>
+            <button name="accept" type="submit" value="Continue" class="btn btn-primary btn-block">{{ "request-sms-unlock"|i18n }}</button>
           </form>
         </div>
       </div>
