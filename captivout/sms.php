@@ -1,7 +1,7 @@
 <?php
 require_once ("include/setup.inc.php");
 require_once ("include/auth.inc.php");
-require_once ("include/sms_api.php");
+require_once ("service/sms.inc.php");
 
 if(isset($_POST['config'])) {
   // get config and number
@@ -43,6 +43,8 @@ if(isset($_POST['config'])) {
         $view->addInfo("no-unused-tickets");
       } catch(\sms\NumberIsLockedException $e) {
         $view->addInfo("number-is-blocked");
+      } catch(\sms\GatewayErrorException $e) {
+        $view->addInfo("gateway-error");
       }
     }
   }

@@ -10,10 +10,15 @@ class WebClient():
     self.url = url
     self.username = username
     self.password = password
-
+    self.cp = False
     self.session = None
 
     self.__login()
+    
+  
+  def useCP(self):
+    """ if self.cp is true, use the captivate portal form to send sms instead of the one from the admin interface """
+    self.cp = True
     
   def importTickets(self, db, tickets):
     
@@ -58,8 +63,11 @@ class WebClient():
     self.__post("settings.php", data)
     
   def sendSms(self, number):
-    """ send an sms in the sms test screen """
-    return self.__postAsSoup('sms.php', {'send': '', 'config': '0', 'nummer': number})
+    """ send an sms in the sms test screen or from the captivate login """
+    if self.cp:
+      return self.__postAsSoup('requestSms.php?foo[DEL]bar', {'submit': 'submit', 'number': number})
+    else:
+      return self.__postAsSoup('sms.php', {'send': '', 'config': '0', 'nummer': number})
     
   def isLocked(self, number):
     """ check if phine number is locked """

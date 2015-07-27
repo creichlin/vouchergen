@@ -30,7 +30,7 @@ class TestSms(TestBase):
 
   def setUp(self):
     TestBase.setUp(self)
-    config = [{"label" : "Default", "table" : "sms", "countryPrefix" : "+41", "example" : "079 123 45 67", "text" : "Ticket: {NUMBER}", "validator" : "0[0-9]{9}", "httpGet" : "http://vogen.local/testSmsProvider.php?text={TEXT}&number={NUMBER}"}]
+    config = [{"label" : "Default", "table" : "sms", "countryPrefix" : "+41", "example" : "079 123 45 67", "text" : "Ticket: {TICKET}", "validator" : "0[0-9]{9}", "httpGet" : "http://vogen.local/testSmsProvider.php?text={TEXT}&number={NUMBER}"}]
     self.wc.updateSettings(sms_gateway = json.dumps(config));
 
 
@@ -63,11 +63,26 @@ class TestSms(TestBase):
 
     self.assertIsNotNone(result.find("div", {'message-id': 'number-is-blocked'}))
     
+  def testSendWithGatewayError(self):
+    self.wc.importTickets('sms', ['aaaaaa', 'bbbbbb'])
+    result = self.wc.sendSms('079 123 45 99')
+
+    self.assertIsNotNone(result.find("div", {'message-id': 'gateway-error'}))
+    
   def testIfSendtSmsIsLocked(self):
     self.wc.importTickets('sms', ['aaaaaa'])
     self.assertFalse(self.wc.isLocked('079 123 45 67'))
     result = self.wc.sendSms('079 123 45 67')
     self.assertTrue(self.wc.isLocked('079 123 45 67'))
+    
+    
+#
+# same as test sms but using captivate portal to send sms
+#
+class TestCPSms(TestSms):
+  def setUp(self):
+    TestSms.setUp(self)
+    self.wc.useCP()
 
 class TestDatabases(TestBase):
 

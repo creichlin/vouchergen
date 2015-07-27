@@ -1,6 +1,6 @@
 <?php
 require_once ("include/setup.inc.php");
-require_once ("include/sms_api.php");
+require_once ("service/sms.inc.php");
 
 $qs = $_SERVER['QUERY_STRING'];
 $qs = explode("[DEL]", $qs);
@@ -13,19 +13,21 @@ $view->set("portalAction", $_SESSION['pa']);
 $view->set("portalRedirect", $_SESSION['pr']);
 
 if(isset($_POST['submit'])) {
-  $sms = new \sms\Sms($config->get("sms_gateway")[0], $_POST['nummer']);
+  $sms = new \sms\Sms($config->get("sms_gateway")[0], $_POST['number']);
 
   if($sms->isValid()) {
     try {
       $sms->send();
-      $view->addInfo("sms-request-sendt-sms");
+      $view->addInfo("sendt-sms");
     } catch(\sms\NoUnusedTicketsException $e) {
-      $view->addInfo("sms-request-no-unused-tickets");
+      $view->addInfo("no-unused-tickets");
     } catch(\sms\NumberIsLockedException $e) {
-      $view->addInfo("sms-request-number-is-blocked");
+      $view->addInfo("number-is-blocked");
+    } catch(\sms\GatewayErrorException $e) {
+      $view->addInfo("gateway-error");
     }
   } else {
-    $view->addWarning("sms-request-invalid-number");
+    $view->addWarning("invalid-mobile-number");
   }
 }
 

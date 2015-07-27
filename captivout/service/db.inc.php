@@ -15,18 +15,23 @@ class Db {
       $tables[] = $row[0];
     }
 
-      if(!in_array('sms_log', $tables)) {
-      $this->query("CREATE TABLE IF NOT EXISTS `sms_log` (`id` int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
+    if(!in_array('sms_log', $tables)) {
+      $this->query("CREATE TABLE IF NOT EXISTS sms_log (id int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
     }
 
     if(!in_array('test_sms', $tables)) {
-      $this->query("CREATE TABLE IF NOT EXISTS `test_sms` (`id` int(11) NOT NULL auto_increment, `number` text NOT NULL, `text` text not null, `date` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
+      $this->query("CREATE TABLE IF NOT EXISTS test_sms (id int(11) NOT NULL auto_increment, `number` text NOT NULL, `text` text not null, `date` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
     }
 
     if(!in_array('voucher_settings', $tables)) {
-      $this->query("CREATE TABLE IF NOT EXISTS `voucher_settings` (`name` varchar(100) NOT NULL, `value` text NOT NULL) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
-      $this->query("ALTER TABLE `voucher_settings` ADD PRIMARY KEY(`name`)");
+      $this->query("CREATE TABLE IF NOT EXISTS voucher_settings (`name` varchar(100) NOT NULL, `value` text NOT NULL) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
+      $this->query("ALTER TABLE voucher_settings ADD PRIMARY KEY(`name`)");
     }
+
+    if(!in_array('sms_history', $tables)) {
+      $this->query("CREATE TABLE IF NOT EXISTS sms_history (id int(11) NOT NULL auto_increment, `number` text NOT NULL, `date` datetime NOT NULL, `status` int not null, message text, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
+    }
+
   }
 
   function query($statement, $params = array()) {
@@ -182,6 +187,14 @@ class Db {
             $empf
         ]);
       }
+    });
+  }
+
+  function addHistory($number, $code, $message) {
+    $this->atomic(function () use($number, $code, $message) {
+      $this->query("INSERT INTO sms_history (number, `date`, status, message) VALUES(?, NOW(), ?, ?)", [
+          $number, $code, $message
+          ]);
     });
   }
 
