@@ -11,6 +11,10 @@ $qs = explode("[DEL]", $qs);
 if(count($qs) == 2) {
   $_SESSION['pa'] = $qs[0];
   $_SESSION['pr'] = $qs[1];
+} else if(count($qs) == 1) {
+  if($qs[0] == "error") {
+    $view->addWarning("authentication-error");
+  }
 }
 
 $view->set("portalAction", $_SESSION['pa']);
