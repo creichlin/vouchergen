@@ -34,6 +34,10 @@ class View {
     $this->model['title'] = basename($_SERVER['PHP_SELF'], ".php") . "-title";
   }
 
+  function setLanguage($lang) {
+    $this->i18n = new \aLang("view", $lang);
+  }
+
   private function addMessage($type, $key, $model = []) {
     $message = $this->i18n->get($key);
 

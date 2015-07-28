@@ -30,7 +30,7 @@ class TestSms(TestBase):
 
   def setUp(self):
     TestBase.setUp(self)
-    config = [{"label" : "Default", "table" : "sms", "countryPrefix" : "+41", "example" : "079 123 45 67", "text" : "Ticket: {TICKET}", "validator" : "0[0-9]{9}", "httpGet" : "http://vogen.local/testSmsProvider.php?text={TEXT}&number={NUMBER}"}]
+    config = [{"label" : "Default", "table" : "sms", "countryPrefix" : "+41", "language" : "de", "example" : "079 123 45 67", "text" : "Ticket: {TICKET}", "validator" : "0[0-9]{9}", "httpGet" : "http://vogen.local/testSmsProvider.php?text={TEXT}&number={NUMBER}"}]
     self.wc.updateSettings(sms_gateway = json.dumps(config));
 
 
