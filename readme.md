@@ -8,21 +8,24 @@ warning
 
 It has only be tested on debian based linux systems. It is possible that problems arise on other systems.
 
-changes
--------
+Configuration errors will not be caught. So they might produce errors if not set properly. If there is a problem a look into
+the servers error log should shed some light.
+
+changes from vouchergen
+-----------------------
 
   * use file for configuration
   * make config by env vars possible (config can be done in apache config file)
   * config from db can be set by file or env vars (deploy can be easier made automatically)
-  * extract db code into own module
-  * add templates for views (easier readable code)
+  * extracted all db code into own module
+  * added templates (twig) for views (easier readable code)
   * use pdo for db access (current mysql api deprecated, no transactions)
   * add transactions (was a small chance that same key is sendt to multiple persons)
-  * use prepared statement (to prevent sql injection)
+  * use prepared statements (to prevent sql injection)
   * integrate i18n into templates
-  * make country phone prefix code configurable
+  * make sms gateway configurable
   * add a bunch of tests
-  * make userinterface beautiful (done) and consolidated
+  * make userinterface beautiful and consolidated
  
 installation
 ------------
@@ -68,7 +71,7 @@ A config file goes into /etc/captivout/captivout
     password = admin-interface-password
     db-host = localhost
     db-username = captivout
-    db-password = db-password
+    db-password = db-pa$$word
     db-schema = captivout
     
 The values above are needed. Those are username and password for the web interface and connection information for the
