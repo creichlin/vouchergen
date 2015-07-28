@@ -53,7 +53,9 @@ class Config {
 
     // read from env variables
     foreach($this->default as $key => $value) {
-      $val = getenv("vg_$key");
+      $env = str_replace("-", "_", $key);
+      $env = strtoupper($key);
+      $val = getenv("CPO_$env");
       if($val) {
         $this->set($key, $val, 'env');
       }
