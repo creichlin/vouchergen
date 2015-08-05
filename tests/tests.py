@@ -1,4 +1,5 @@
 import json
+import time
 import webclient
 import unittest
 import mysql.connector
@@ -30,7 +31,7 @@ class TestSms(TestBase):
 
   def setUp(self):
     TestBase.setUp(self)
-    config = [{"label" : "Default", "table" : "sms", "countryPrefix" : "+41", "language" : "de", "example" : "079 123 45 67", "text" : "Ticket: {TICKET}", "validator" : "0[0-9]{9}", "httpGet" : "http://vogen.local/testSmsProvider.php?text={TEXT}&number={NUMBER}"}]
+    config = [{"label" : "Default", "locked_time": 0.06, "table" : "sms", "countryPrefix" : "+41", "language" : "de", "example" : "079 123 45 67", "text" : "Ticket: {TICKET}", "validator" : "0[0-9]{9}", "httpGet" : "http://vogen.local/testSmsProvider.php?text={TEXT}&number={NUMBER}"}]
     self.wc.updateSettings(sms_gateway = json.dumps(config));
 
 
@@ -62,6 +63,18 @@ class TestSms(TestBase):
     result = self.wc.sendSms('079 123 45 67')
 
     self.assertIsNotNone(result.find("div", {'message-id': 'number-is-blocked'}))
+
+  def testSendWithLockedNumberButWaitTillUnlocked(self):
+    self.wc.importTickets('sms', ['aaaaaa', 'bbbbbb', 'cccccc'])
+    self.wc.sendSms('079 123 45 67')
+
+    result = self.wc.sendSms('079 123 45 67')
+    self.assertIsNotNone(result.find("div", {'message-id': 'number-is-blocked'}))
+
+    # expiration is set to 0.6 minutes in config above which is 3.6 seconds, wait a bit longer to make up for rounding
+    time.sleep(5)
+    result = self.wc.sendSms('079 123 45 67')
+    self.assertIsNotNone(result.find("div", {'message-id': 'sendt-sms'}))
     
   def testSendWithGatewayError(self):
     self.wc.importTickets('sms', ['aaaaaa', 'bbbbbb'])

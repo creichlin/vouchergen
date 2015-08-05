@@ -175,6 +175,7 @@ This is a list of key, value objects encoded in json. Its used to define the gat
         "label": "Default",
         "table": "sms",
         "language": "de",
+        "locked_time": 30,
         "countryPrefix": "+41",
         "example": "079 123 45 67",
         "text": "Der code fuer das netz lala lautet {TICKET}",
@@ -186,6 +187,7 @@ This is a list of key, value objects encoded in json. Its used to define the gat
   * label is only for admin interface and basically irrelevant
   * table defines the table where the codes for the sms should be fetched from. one of the keys in the **dbtables** option
   * language is the code of the language the captivate login page should be in. the code given needs to have a file in captivout/include/lang
+  * locked_time user cannot send himself a new ticket code during this time. in minutes.
   * countryPrefix: country code, only one can be configured for now
   * example is a dummy number that will be displayed in the input field so the guest knows how to enter the number. should be withouth country code
   * text is the text that will be sendt by the sms. {TICKET} will be replaced by the actual ticket code.

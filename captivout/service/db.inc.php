@@ -16,7 +16,7 @@ class Db {
     }
 
     if(!in_array('sms_log', $tables)) {
-      $this->query("CREATE TABLE IF NOT EXISTS sms_log (id int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `timestamp` date NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
+      $this->query("CREATE TABLE IF NOT EXISTS sms_log (id int(11) NOT NULL auto_increment, `nummer` text NOT NULL, `date` datetime NOT NULL, PRIMARY KEY  (`id`)) DEFAULT CHARSET=utf8 ENGINE = INNODB;");
     }
 
     if(!in_array('test_sms', $tables)) {
@@ -175,15 +175,15 @@ class Db {
 
   function logNumber($empf) {
     $this->atomic(function () use($empf) {
-      $mysql = $this->query("SELECT timestamp FROM sms_log WHERE nummer = ?", [
+      $mysql = $this->query("SELECT `date` FROM sms_log WHERE nummer = ?", [
           $empf
       ]);
       if($mysql->fetch()) { // is it in the db? update it
-        $this->query("UPDATE sms_log SET timestamp = CURDATE() WHERE nummer = ?;", [
+        $this->query("UPDATE sms_log SET `date` = NOW() WHERE nummer = ?;", [
             $empf
         ]);
       } else { // otherwise create it anew
-        $this->query("INSERT INTO sms_log (nummer, timestamp) VALUES(?, CURDATE())", [
+        $this->query("INSERT INTO sms_log (nummer, `date`) VALUES(?, NOW())", [
             $empf
         ]);
       }
@@ -206,21 +206,27 @@ class Db {
     });
   }
 
-  function numberIsNotLocked($empf) {
-    return $this->atomic(function () use($empf) {
-      $mysql = $this->query('SELECT timestamp FROM sms_log WHERE nummer = ?', [
+  function numberIsNotLocked($empf, $time) {
+    $time = round($time * 60); # from minutes to seconds
+    print($time);
+    return $this->atomic(function () use($empf, $time) {
+      $mysql = $this->query('SELECT `date` FROM sms_log WHERE nummer = ?', [
           $empf
       ]);
       if($mysql->rowCount() > 0) { // Ist in Datenbank
         while($row = $mysql->fetch()) {
-          $data = $row['timestamp'];
+          $data = strtotime($row['date']);
         }
-        if($data != date('Y-m-d'))
-          return 1; // letzer Abruf ist ungleich heute, gebe 1 zurÃ¼ck
+
+        print("A" . $data);
+        print("B" . strtotime("-$time seconds"));
+
+        if($data < strtotime("-$time seconds"))
+          return 1; // older than expiration time
         else
-          return 0; // letzer Abruf ist heute, gebe 0 zurÃ¼ck
+          return 0; // still in expiration time
       }
-      return 1; // ist nicht in Datenbank, gebe 1 zurÃ¼ck
+      return 1; // not in db, not locked
     });
   }
 }

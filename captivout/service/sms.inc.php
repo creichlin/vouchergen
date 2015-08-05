@@ -82,7 +82,7 @@ class Sms {
 
   function isLocked() {
     global $db;
-    return !$db->numberIsNotLocked($this->number);
+    return !$db->numberIsNotLocked($this->number, $this->config['locked_time']);
   }
 
   function block() {
