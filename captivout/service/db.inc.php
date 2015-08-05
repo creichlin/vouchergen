@@ -208,7 +208,6 @@ class Db {
 
   function numberIsNotLocked($empf, $time) {
     $time = round($time * 60); # from minutes to seconds
-    print($time);
     return $this->atomic(function () use($empf, $time) {
       $mysql = $this->query('SELECT `date` FROM sms_log WHERE nummer = ?', [
           $empf
@@ -217,9 +216,6 @@ class Db {
         while($row = $mysql->fetch()) {
           $data = strtotime($row['date']);
         }
-
-        print("A" . $data);
-        print("B" . strtotime("-$time seconds"));
 
         if($data < strtotime("-$time seconds"))
           return 1; // older than expiration time
